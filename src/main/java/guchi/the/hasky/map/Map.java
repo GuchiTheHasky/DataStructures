@@ -12,5 +12,6 @@ public interface Map <K, V> {
         V remove(K key);
 
         boolean containsKey(K key);
+        void printValues();
 
 }

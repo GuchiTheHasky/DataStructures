@@ -57,7 +57,7 @@ public class LinkedList <T> implements List<T>{
             if (index == size - 1){
                 last = previous;
             }
-            previous.next.previous = previous;
+            previous.previous.previous = previous;
         }
         size--;
         return removedElement;

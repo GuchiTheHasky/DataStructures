@@ -11,22 +11,6 @@ public class HashMap<K, V> implements Map<K, V> {
             this.key = key;
             this.value = value;
         }
-
-        public K getKey() {
-            return key;
-        }
-
-        public void setKey(K key) {
-            this.key = key;
-        }
-
-        public V getValue() {
-            return value;
-        }
-
-        public void setValue(V value) {
-            this.value = value;
-        }
     }
 
     public static final int DEFAULT_CAPACITY = 16;
@@ -53,8 +37,8 @@ public class HashMap<K, V> implements Map<K, V> {
     @Override
     public V get(K key) {
         for (int i = 0; i < size; i++) {
-            if (entries[i].getKey().equals(key)){
-                return entries[i].getValue();
+            if (entries[i].key.equals(key)){
+                return entries[i].value;
             }
         }
         return null;
@@ -74,7 +58,7 @@ public class HashMap<K, V> implements Map<K, V> {
     @Override
     public V remove(K key) {
         for (int i = 0; i < size; i++) {
-            if (entries[i].getKey().equals(key)){
+            if (entries[i].key.equals(key)){
                 Entry<K, V> deletedEntry = entries[i];
                 Entry<K, V>[] tempEntries = (Entry<K, V>[]) new Entry[size - 1];
                 int count = 0;
@@ -86,7 +70,7 @@ public class HashMap<K, V> implements Map<K, V> {
                 }
                 size--;
                 entries = tempEntries;
-                return deletedEntry.getValue();
+                return deletedEntry.value;
             }
         }
         return null;
@@ -95,12 +79,22 @@ public class HashMap<K, V> implements Map<K, V> {
     @Override
     public boolean containsKey(K key) {
         for (int i = 0; i < size; i++) {
-            if (entries[i].getKey().equals(key)){
+            if (entries[i].key.equals(key)){
                 return true;
             }
         }
         return false;
     }
+
+    @Override
+    public void printValues() {
+        if (!isEmpty()){
+            for (Entry<K, V> entry : entries){
+                System.out.print(entry.value + " ");
+            }
+        }
+    }
+
 
     @SuppressWarnings("unchecked")
     private void rise() {
@@ -114,7 +108,7 @@ public class HashMap<K, V> implements Map<K, V> {
     private void sortEntryMap(){
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                if (getCharAtValueInt(entries[i].getKey()) < getCharAtValueInt(entries[j].getKey())){
+                if (getCharAtValueInt(entries[i].key) < getCharAtValueInt(entries[j].key)){
                     Entry<K, V> temp = entries[i];
                     entries[i] = entries[j];
                     entries[j] = temp;
@@ -129,7 +123,7 @@ public class HashMap<K, V> implements Map<K, V> {
     }
     private boolean isKeyExist(K key){
         for (int i = 0; i < size; i++) {
-            if (entries[i].getKey().equals(key)){
+            if (entries[i].key.equals(key)){
                 return true;
             }
         }

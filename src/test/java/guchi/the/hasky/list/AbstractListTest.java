@@ -17,7 +17,6 @@ public abstract class AbstractListTest {
     }
     abstract List<String> getList();
 
-
     @DisplayName("Test add some elements in list, check size.")
     @Test
     public void addElements(){

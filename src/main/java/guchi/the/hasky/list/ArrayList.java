@@ -6,7 +6,7 @@ import java.util.StringJoiner;
 public class ArrayList<T> implements List<T> {
     private T[] array;
     private int size;
-    public static final int DEFAULT_CAPACITY = 5;
+    public static final int DEFAULT_CAPACITY = 10;
 
     @SuppressWarnings("unchecked")
     public ArrayList(int initCapacity) {
@@ -22,11 +22,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T element) {
-        rise();
-        if (!Objects.isNull(element)){
-        array[size] = element;
-        size++;
-        }
+        add(element, size);
     }
 
 
@@ -63,10 +59,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void clear() {
-        size = 0;
-        array =(T[]) new Object[DEFAULT_CAPACITY];
+        if (!isEmpty()) {
+            for (int i = 0; i < size; i++) {
+                array[i] = null;
+            }
+            size = 0;
+        }
     }
 
     @Override
@@ -121,9 +120,9 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     private void rise() {
         if (array.length == size) {
-            T[] tempArray = (T[])new Object[array.length * 2];
+            T[] tempArray = (T[])new Object[(int) (size * 1.5)]; //
             System.arraycopy(array, 0, tempArray, 0, size);
-            array = (T[]) tempArray;
+            array = tempArray;
         }
     }
 }

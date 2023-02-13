@@ -50,14 +50,22 @@ public class LinkedList <T> implements List<T>{
         if (index == 0){
             removedElement = first.element;
             first = first.next;
-        } else {
+        } else if (index < size - 1) {
             Node<T> previous = getNodeByIndex(index - 1);
             removedElement = previous.next.element;
             previous.next = previous.next.next;
             if (index == size - 1){
                 last = previous;
             }
-            previous.previous.previous = previous;
+            previous.next.previous = previous;
+        }
+        else {
+            Node<T> previous = getNodeByIndex(index - 1);
+            removedElement = previous.next.element;
+            previous.next = previous.next.next;
+            if (index == size - 1){
+                last = previous;
+            }
         }
         size--;
         return removedElement;

@@ -6,7 +6,7 @@ import java.util.StringJoiner;
 public class ArrayList<T> implements List<T> {
     private T[] array;
     private int size;
-    public static final int DEFAULT_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
 
     @SuppressWarnings("unchecked")
     public ArrayList(int initCapacity) {
@@ -49,7 +49,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public T get(int index) {
         Objects.checkIndex(index, size);
-        return (T) array[index];
+        return array[index];
     }
 
     @Override

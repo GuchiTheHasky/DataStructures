@@ -1,9 +1,13 @@
 package guchi.the.hasky.list;
 
+import guchi.the.hasky.iterator.MyCollection;
+import guchi.the.hasky.iterator.MyIterator;
+
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class LinkedList <T> implements List<T>{
+public class LinkedList <T> implements List<T> {
     private Node<T> first;
     private Node<T> last;
     private int size;
@@ -150,10 +154,10 @@ public class LinkedList <T> implements List<T>{
     }
 
 
-    static class Node<T>{
-        T element;
-        Node<T> next;
-        Node<T> previous;
+    private static class Node<T>{
+        private T element;
+        private Node<T> next;
+        private Node<T> previous;
         public Node(T element){
             this.element = element;
         }

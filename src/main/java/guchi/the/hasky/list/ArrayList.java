@@ -1,9 +1,12 @@
 package guchi.the.hasky.list;
 
+import guchi.the.hasky.iterator.MyCollection;
+import guchi.the.hasky.iterator.MyIterator;
+
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class ArrayList<T> implements List<T> {
+public class ArrayList<T> implements List<T>, MyCollection<T> {
     private T[] array;
     private int size;
     private static final int DEFAULT_CAPACITY = 10;
@@ -111,9 +114,9 @@ public class ArrayList<T> implements List<T> {
     @Override
     public String toString(){
         StringJoiner joiner = new StringJoiner("," , "{", "}");
-        for (int i = 0; i < size; i++) {
-            joiner.add(array[i].toString());
-        }
+        MyIterator<T> iterator = getIterator();
+        joiner.add(iterator.next().toString());
+
         return joiner.toString();
     }
 
@@ -123,6 +126,25 @@ public class ArrayList<T> implements List<T> {
             T[] tempArray = (T[])new Object[(int) (size * 1.5)]; //
             System.arraycopy(array, 0, tempArray, 0, size);
             array = tempArray;
+        }
+    }
+
+    @Override
+    public MyIterator<T> getIterator() {
+        return new Iterator<>();
+    }
+
+    private class Iterator<T> implements MyIterator<T>{
+        private int index;
+
+        @Override
+        public boolean hasNext() {
+            return index < size;
+        }
+
+        @Override
+        public T next() {
+            return (T) array[index++];
         }
     }
 }

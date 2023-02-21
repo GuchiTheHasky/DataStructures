@@ -1,26 +1,24 @@
 package guchi.the.hasky.list;
 
-import guchi.the.hasky.iterator.MyCollection;
-import guchi.the.hasky.iterator.MyIterator;
 
-import java.util.Objects;
+import java.util.Iterator;
 import java.util.StringJoiner;
 
-public class ArrayList<T> implements List<T>, MyCollection<T> {
+public class ArrayList<T> implements List<T> {
+    private static final int DEFAULT_CAPACITY = 10;
     private T[] array;
     private int size;
-    private static final int DEFAULT_CAPACITY = 10;
-
-    @SuppressWarnings("unchecked")
-    public ArrayList(int initCapacity) {
-        if (initCapacity <= 0) {
-            throw new IllegalArgumentException();
-        }
-        this.array = (T[]) new Object [initCapacity];
-    }
 
     public ArrayList() {
         this(DEFAULT_CAPACITY);
+    }
+
+    @SuppressWarnings("unchecked")
+    public ArrayList(int initCapacity) {
+        if (initCapacity < 0) {
+            System.out.println("List size, can't be less than zero.");
+        }
+        this.array = (T[]) new Object[initCapacity];
     }
 
     @Override
@@ -28,47 +26,55 @@ public class ArrayList<T> implements List<T>, MyCollection<T> {
         add(element, size);
     }
 
-
     @Override
     public void add(T element, int index) {
-        if (!Objects.isNull(element)) {
-            Objects.checkIndex(index, size + 1);
+        if (index >= 0 && index <= size) {
             rise();
             System.arraycopy(array, index, array, index + 1, size - index);
             array[index] = element;
             size++;
+        } else {
+            throw new IndexOutOfBoundsException(indexError());
         }
     }
 
     @Override
     public T remove(int index) {
-        Objects.checkIndex(index, size);
-        T element = array[index];
-        System.arraycopy(array, index + 1, array, index, size - index - 1);
-        size--;
-        return element;
+        if (index >= 0 && index <= size) {
+            T element = array[index];
+            System.arraycopy(array, index + 1, array, index, size - index - 1);
+            size--;
+            return element;
+        } else {
+            throw new IndexOutOfBoundsException(indexError());
+        }
     }
 
     @Override
     public T get(int index) {
-        Objects.checkIndex(index, size);
-        return array[index];
+        if (index >= 0 && index <= size) {
+            return array[index];
+        }
+        else {
+            throw new IndexOutOfBoundsException(indexError());
+        }
     }
 
     @Override
     public void set(T element, int index) {
-        Objects.checkIndex(index, size);
-        array[index] = element;
+        if (index >= 0 && index <= size) {
+            array[index] = element;
+        } else {
+            throw new IndexOutOfBoundsException(indexError());
+        }
     }
 
     @Override
     public void clear() {
-        if (!isEmpty()) {
-            for (int i = 0; i < size; i++) {
-                array[i] = null;
-            }
-            size = 0;
+        for (int i = 0; i < size; i++) {
+            array[i] = null;
         }
+        size = 0;
     }
 
     @Override
@@ -88,9 +94,6 @@ public class ArrayList<T> implements List<T>, MyCollection<T> {
 
     @Override
     public int indexOf(T element) {
-        if (Objects.isNull(element)){
-            return -1;
-        }
         for (int i = 0; i < size; i++) {
             if (array[i].equals(element)) {
                 return i;
@@ -101,9 +104,6 @@ public class ArrayList<T> implements List<T>, MyCollection<T> {
 
     @Override
     public int lastIndexOf(T element) {
-        if (Objects.isNull(element)){
-            return -1;
-        }
         for (int i = size - 1; i >= 0; i--) {
             if (array[i].equals(element)) {
                 return i;
@@ -113,38 +113,39 @@ public class ArrayList<T> implements List<T>, MyCollection<T> {
     }
     @Override
     public String toString(){
-        StringJoiner joiner = new StringJoiner("," , "{", "}");
-        MyIterator<T> iterator = getIterator();
-        joiner.add(iterator.next().toString());
-
+        StringJoiner joiner = new StringJoiner(", " , "[", "]");
+        for (T element : this) {
+            joiner.add(element.toString());
+        }
         return joiner.toString();
     }
 
     @SuppressWarnings("unchecked")
     private void rise() {
         if (array.length == size) {
-            T[] tempArray = (T[])new Object[(int) (size * 1.5)]; //
+            T[] tempArray = (T[]) new Object[(int) (size * 2)];
             System.arraycopy(array, 0, tempArray, 0, size);
             array = tempArray;
         }
     }
-
-    @Override
-    public MyIterator<T> getIterator() {
-        return new Iterator<>();
+    private String indexError() {
+        return "Error, index: less than: \"0\" or more than: \"" + (size + 1) + "\".";
     }
 
-    private class Iterator<T> implements MyIterator<T>{
+    @Override
+    public MyIterator iterator() {
+        return new MyIterator();
+    }
+
+    private class MyIterator implements Iterator<T> {
         private int index;
 
-        @Override
         public boolean hasNext() {
             return index < size;
         }
 
-        @Override
         public T next() {
-            return (T) array[index++];
+            return array[index++];
         }
     }
 }

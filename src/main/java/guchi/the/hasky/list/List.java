@@ -1,11 +1,13 @@
 package guchi.the.hasky.list;
 
-public interface List<T> {
+import java.io.IOException;
+
+public interface List<T> extends Iterable<T> {
     void add(T element);
-    void add(T element, int index);
-    T remove(int index);
-    T get(int index);
-    void set(T element, int index);
+    void add(T element, int index) throws IndexOutOfBoundsException;
+    T remove(int index) throws IndexOutOfBoundsException;
+    T get(int index) throws IndexOutOfBoundsException;
+    void set(T element, int index) throws IndexOutOfBoundsException;
     void clear();
     int size();
     boolean isEmpty();

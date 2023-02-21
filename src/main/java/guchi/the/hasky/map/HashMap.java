@@ -4,10 +4,11 @@ import java.util.Objects;
 
 public class HashMap<K, V> implements Map<K, V> {
 
-    static class Entry<K, V>{
+    static class Entry<K, V> {
         private K key;
         private V value;
-        public Entry(K key, V value){
+
+        public Entry(K key, V value) {
             this.key = key;
             this.value = value;
         }
@@ -22,14 +23,12 @@ public class HashMap<K, V> implements Map<K, V> {
     @Override
     public V put(K key, V value) {
         if (!isKeyExist(key)) {
-            if (!Objects.isNull(value)) {
-                rise();
-                Entry<K, V> entry = new Entry(key, value);
-                entries[size] = entry;
-                size++;
-                sortEntryMap();
-                return (V) entry;
-            }
+            rise();
+            Entry<K, V> entry = new Entry(key, value);
+            entries[size] = entry;
+            size++;
+            sortEntryMap();
+            return (V) entry;
         }
         return null;
     }
@@ -37,7 +36,7 @@ public class HashMap<K, V> implements Map<K, V> {
     @Override
     public V get(K key) {
         for (int i = 0; i < size; i++) {
-            if (entries[i].key.equals(key)){
+            if (entries[i].key.equals(key)) {
                 return entries[i].value;
             }
         }
@@ -58,12 +57,12 @@ public class HashMap<K, V> implements Map<K, V> {
     @Override
     public V remove(K key) {
         for (int i = 0; i < size; i++) {
-            if (entries[i].key.equals(key)){
+            if (entries[i].key.equals(key)) {
                 Entry<K, V> deletedEntry = entries[i];
                 Entry<K, V>[] tempEntries = (Entry<K, V>[]) new Entry[size - 1];
                 int count = 0;
-                for (int j = 0; j < size; j++){
-                    if (j != i){
+                for (int j = 0; j < size; j++) {
+                    if (j != i) {
                         tempEntries[count] = entries[j];
                         count++;
                     }
@@ -79,7 +78,7 @@ public class HashMap<K, V> implements Map<K, V> {
     @Override
     public boolean containsKey(K key) {
         for (int i = 0; i < size; i++) {
-            if (entries[i].key.equals(key)){
+            if (entries[i].key.equals(key)) {
                 return true;
             }
         }
@@ -88,8 +87,8 @@ public class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public void printValues() {
-        if (!isEmpty()){
-            for (Entry<K, V> entry : entries){
+        if (!isEmpty()) {
+            for (Entry<K, V> entry : entries) {
                 System.out.print(entry.value + " ");
             }
         }
@@ -99,16 +98,16 @@ public class HashMap<K, V> implements Map<K, V> {
     @SuppressWarnings("unchecked")
     private void rise() {
         if (size == DEFAULT_CAPACITY) {
-            Entry<K, V>[] tempEntries = (Entry<K, V>[])new Object[size * 2];
+            Entry<K, V>[] tempEntries = (Entry<K, V>[]) new Object[size * 2];
             System.arraycopy(entries, 0, tempEntries, 0, size);
             entries = tempEntries;
         }
     }
 
-    private void sortEntryMap(){
+    private void sortEntryMap() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                if (getCharAtValueInt(entries[i].key) < getCharAtValueInt(entries[j].key)){
+                if (getCharAtValueInt(entries[i].key) < getCharAtValueInt(entries[j].key)) {
                     Entry<K, V> temp = entries[i];
                     entries[i] = entries[j];
                     entries[j] = temp;
@@ -117,13 +116,14 @@ public class HashMap<K, V> implements Map<K, V> {
         }
     }
 
-    private int getCharAtValueInt(K key){
+    private int getCharAtValueInt(K key) {
         String str = key.toString();
         return str.charAt(0);
     }
-    private boolean isKeyExist(K key){
+
+    private boolean isKeyExist(K key) {
         for (int i = 0; i < size; i++) {
-            if (entries[i].key.equals(key)){
+            if (entries[i].key.equals(key)) {
                 return true;
             }
         }

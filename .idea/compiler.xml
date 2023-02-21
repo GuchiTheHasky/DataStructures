@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="ListMapImplementation" />
+        <module name="DataStructures" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ListMapImplementation" target="15" />
+    </bytecodeTargetLevel>
   </component>
 </project>

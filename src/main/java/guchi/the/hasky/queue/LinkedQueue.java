@@ -12,6 +12,8 @@ public class LinkedQueue<E> implements Queue<E> {
             this.element = element;
         }
     }
+
+
     private Node<E> first;
     int size;
 

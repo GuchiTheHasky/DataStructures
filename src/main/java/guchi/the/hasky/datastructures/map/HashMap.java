@@ -1,6 +1,4 @@
-package guchi.the.hasky.map;
-
-import java.util.Objects;
+package guchi.the.hasky.datastructures.map;
 
 public class HashMap<K, V> implements Map<K, V> {
 

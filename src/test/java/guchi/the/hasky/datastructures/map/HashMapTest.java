@@ -1,5 +1,7 @@
-package guchi.the.hasky.map;
+package guchi.the.hasky.datastructures.map;
 
+import guchi.the.hasky.datastructures.map.HashMap;
+import guchi.the.hasky.datastructures.map.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

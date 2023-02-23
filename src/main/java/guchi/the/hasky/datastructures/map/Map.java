@@ -1,4 +1,4 @@
-package guchi.the.hasky.map;
+package guchi.the.hasky.datastructures.map;
 
 public interface Map <K, V> {
         V put(K key, V value);

@@ -1,4 +1,4 @@
-package guchi.the.hasky.queue;
+package guchi.the.hasky.datastructures.queue;
 
 public interface Queue <E> {
     void enqueue(E element);

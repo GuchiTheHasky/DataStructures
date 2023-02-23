@@ -1,4 +1,4 @@
-package guchi.the.hasky.list;
+package guchi.the.hasky.datastructures.list;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,7 +48,7 @@ public abstract class AbstractListTest {
         list.add("S", 0);
 
         assertEquals("S", list.get(0));
-        assertEquals(list.size(), 4);
+        assertEquals( 4, list.size());
     }
 
     @DisplayName("Test, add an element in the middle of list and check size.")
@@ -81,12 +81,12 @@ public abstract class AbstractListTest {
 
     @DisplayName("Test, add element in list with less than zero index.")
     @Test
-    public void addElementInIndexLessThanZeroAndCheckSize() {
+    public void addElementWithIndexLessThanZeroAndCheckSize() { //+
         list.add("Scooby");
         list.add("dooby");
         list.add("doo");
 
-        Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
+        Throwable thrown = assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
             list.add("Scooby doo", -5);
         });
 
@@ -118,7 +118,7 @@ public abstract class AbstractListTest {
         list.remove(0);
 
         assertEquals("Albus", list.get(0));
-        assertEquals(list.size(), 5);
+        assertEquals(5, list.size());
     }
 
     @DisplayName("Test, remove last element from list and check size.")
@@ -134,7 +134,7 @@ public abstract class AbstractListTest {
         list.remove(5);
 
         assertEquals("Dumbledore", list.get(4));
-        assertEquals(list.size(), 5);
+        assertEquals(5, list.size());
     }
 
     @DisplayName("Test, remove last element from list.")
@@ -149,7 +149,7 @@ public abstract class AbstractListTest {
         list.remove(2);
 
         assertEquals("Wulfric", list.get(2));
-        assertEquals(list.size(), 5);
+        assertEquals(5, list.size());
     }
 
     @DisplayName("Test, remove from out of bounds index.")
@@ -167,7 +167,7 @@ public abstract class AbstractListTest {
         });
 
         assertNotNull(thrown.getMessage());
-        assertEquals(list.size(), 6);
+        assertEquals(6, list.size());
     }
 
     @DisplayName("Test, remove element with index less than zero.")
@@ -180,7 +180,7 @@ public abstract class AbstractListTest {
         list.add("Brian");
         list.add("Dumbledore");
 
-        Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
+        Throwable thrown = assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
             list.remove(-11);
         });
 
@@ -225,7 +225,7 @@ public abstract class AbstractListTest {
         list.add("Dumbledore");
 
         assertEquals("Wulfric", list.get(2));
-        assertEquals(list.size(), 5);
+        assertEquals(5, list.size());
 
     }
 
@@ -255,7 +255,7 @@ public abstract class AbstractListTest {
         list.add("Brian");
         list.add("Dumbledore");
 
-        Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
+        Throwable thrown = assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
             list.get(-100);
         });
 
@@ -334,7 +334,7 @@ public abstract class AbstractListTest {
         list.add("Brian");
         list.add("Dumbledore");
 
-        Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
+        Throwable thrown = assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
             list.set("Potter", -100);
         });
 
@@ -444,7 +444,7 @@ public abstract class AbstractListTest {
 
     @DisplayName("Test, is toString() work correctly.")
     @Test
-    public void printString() {
+    public void turnListToStringAndPrintIt() {
         list.add("Scooby");
         list.add("dooby");
         list.add("doo");

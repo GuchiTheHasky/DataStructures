@@ -1,4 +1,4 @@
-package guchi.the.hasky.list;
+package guchi.the.hasky.datastructures.list;
 
 public class ArrayListTest extends AbstractListTest {
 

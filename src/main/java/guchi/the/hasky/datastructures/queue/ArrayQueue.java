@@ -1,4 +1,4 @@
-package guchi.the.hasky.queue;
+package guchi.the.hasky.datastructures.queue;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -57,7 +57,7 @@ public class ArrayQueue<E> implements Queue<E> {
 
     @Override
     public boolean contains(E element) {
-        if (!isEmpty()){
+        if (!isEmpty()) {
             for (int i = 0; i < size; i++) {
                 if (element.equals(array[i])) {
                     return true;
@@ -74,12 +74,10 @@ public class ArrayQueue<E> implements Queue<E> {
 
     @Override
     public void clear() {
-        if (!isEmpty()){
-            for (int i = 0; i < size; i++) {
-                array[i] = null;
-            }
-            size = 0;
+        for (int i = 0; i < size; i++) {
+            array[i] = null;
         }
+        size = 0;
     }
 
     @SuppressWarnings("unchecked")

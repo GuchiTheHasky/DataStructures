@@ -1,7 +1,4 @@
-package guchi.the.hasky.queue;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+package guchi.the.hasky.datastructures.queue;
 
 
 public class LinkedQueueTest extends AbstractQueueTest {

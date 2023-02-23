@@ -1,4 +1,4 @@
-package guchi.the.hasky.list;
+package guchi.the.hasky.datastructures.list;
 
 
 import java.util.Iterator;
@@ -6,19 +6,28 @@ import java.util.StringJoiner;
 
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
+    private static final double DEFAULT_RISE_VALUE = 1.5;
+
     private T[] array;
     private int size;
+    private double riseValue;
 
     public ArrayList() {
         this(DEFAULT_CAPACITY);
     }
 
-    @SuppressWarnings("unchecked")
     public ArrayList(int initCapacity) {
+        this(initCapacity, DEFAULT_RISE_VALUE);
+    }
+
+    @SuppressWarnings("unchecked")
+    public ArrayList(int initCapacity, double riseValue) {
         if (initCapacity < 0) {
             System.out.println("List size, can't be less than zero.");
+        } else {
+            array = (T[]) new Object[initCapacity];
+            this.riseValue = riseValue;
         }
-        this.array = (T[]) new Object[initCapacity];
     }
 
     @Override
@@ -34,7 +43,7 @@ public class ArrayList<T> implements List<T> {
             array[index] = element;
             size++;
         } else {
-            throw new IndexOutOfBoundsException(indexError());
+            throw new ArrayIndexOutOfBoundsException(indexError());
         }
     }
 
@@ -46,7 +55,7 @@ public class ArrayList<T> implements List<T> {
             size--;
             return element;
         } else {
-            throw new IndexOutOfBoundsException(indexError());
+            throw new ArrayIndexOutOfBoundsException(indexError());
         }
     }
 
@@ -54,9 +63,8 @@ public class ArrayList<T> implements List<T> {
     public T get(int index) {
         if (index >= 0 && index <= size) {
             return array[index];
-        }
-        else {
-            throw new IndexOutOfBoundsException(indexError());
+        } else {
+            throw new ArrayIndexOutOfBoundsException(indexError());
         }
     }
 
@@ -65,7 +73,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= 0 && index <= size) {
             array[index] = element;
         } else {
-            throw new IndexOutOfBoundsException(indexError());
+            throw new ArrayIndexOutOfBoundsException(indexError());
         }
     }
 
@@ -111,9 +119,10 @@ public class ArrayList<T> implements List<T> {
         }
         return -1;
     }
+
     @Override
-    public String toString(){
-        StringJoiner joiner = new StringJoiner(", " , "[", "]");
+    public String toString() {
+        StringJoiner joiner = new StringJoiner(", ", "[", "]");
         for (T element : this) {
             joiner.add(element.toString());
         }
@@ -123,13 +132,14 @@ public class ArrayList<T> implements List<T> {
     @SuppressWarnings("unchecked")
     private void rise() {
         if (array.length == size) {
-            T[] tempArray = (T[]) new Object[(int) (size * 2)];
+            T[] tempArray = (T[]) new Object[(int) (size * riseValue)];
             System.arraycopy(array, 0, tempArray, 0, size);
             array = tempArray;
         }
     }
+
     private String indexError() {
-        return "Error, index: less than: \"0\" or more than: \"" + (size + 1) + "\".";
+        return String.format("Error, index: \nless than => \"0\" or more than => \"%d\".", size + 1);
     }
 
     @Override

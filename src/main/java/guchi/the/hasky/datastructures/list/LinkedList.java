@@ -1,4 +1,4 @@
-package guchi.the.hasky.list;
+package guchi.the.hasky.datastructures.list;
 
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -31,11 +31,21 @@ public class LinkedList<T> implements List<T> {
             last.next = node;
             last = node;
         } else {
-            Node<T> middleNode = first;
+            Node<T> middleNode = null;
+            if (index  < size / 2) {
+                middleNode = first;
             for (int i = 0; i < index; i++) {
                 middleNode = middleNode.next;
             }
+            }
+            else if (index > size / 2) {
+                middleNode = last;
+                for (int i = size - 1; i > index; i--) {
+                    middleNode = middleNode.previous;
+                }
+            }
             node.next = middleNode;
+            assert middleNode != null;
             node.previous = middleNode.previous;
             middleNode.previous.next = node;
         }
@@ -69,6 +79,12 @@ public class LinkedList<T> implements List<T> {
         size++;
     }*/
 
+    /*
+      size == 0
+    * index == 0
+    * index == size
+    * */
+
     @Override
     public T remove(int index) { // має бути чотири кейси
         T removedElement = null;
@@ -76,9 +92,18 @@ public class LinkedList<T> implements List<T> {
             if (index < 0 && index > size - 1) {
                 throw new IndexOutOfBoundsException(indexError());
             }
+
+            if (size == 1) {
+                first = null;
+                last = null;
+            }
+            else if (index == 0) {
+                removedElement = first.element;
+                first = first.next;
+            }
+
+            size--;
         }
-
-
         return removedElement;
     }
 
@@ -187,10 +212,10 @@ public class LinkedList<T> implements List<T> {
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
-        return current;
+        return current.previous;
     }
     private String indexError() {
-        return "Error, index: less than: \"0\" or more than: \"" + (size + 1) + "\".";
+        return String.format("Error, index: \nless than => \"0\" or more than => \"%d\".", size + 1);
     }
 
 

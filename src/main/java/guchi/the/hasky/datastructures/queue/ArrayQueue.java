@@ -1,5 +1,6 @@
 package guchi.the.hasky.datastructures.queue;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -87,5 +88,10 @@ public class ArrayQueue<E> implements Queue<E> {
             System.arraycopy(array, 0, tempArray, 0, size);
             array = tempArray;
         }
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return null;
     }
 }

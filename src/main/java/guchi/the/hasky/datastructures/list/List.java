@@ -1,8 +1,7 @@
 package guchi.the.hasky.datastructures.list;
 
-import java.io.IOException;
-
 public interface List<T> extends Iterable<T> {
+
     /**
      * Add new element in the end of List.
      */

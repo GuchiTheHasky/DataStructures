@@ -1,7 +1,7 @@
 package guchi.the.hasky.datastructures.list;
 
-
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.StringJoiner;
 
 public class ArrayList<T> implements List<T> {
@@ -43,7 +43,7 @@ public class ArrayList<T> implements List<T> {
             array[index] = element;
             size++;
         } else {
-            throw new ArrayIndexOutOfBoundsException(indexError());
+            throw new ArrayIndexOutOfBoundsException(indexAddError(index));
         }
     }
 
@@ -52,10 +52,11 @@ public class ArrayList<T> implements List<T> {
         if (index >= 0 && index <= size) {
             T element = array[index];
             System.arraycopy(array, index + 1, array, index, size - index - 1);
+            array[size - 1] = null;
             size--;
             return element;
         } else {
-            throw new ArrayIndexOutOfBoundsException(indexError());
+            throw new ArrayIndexOutOfBoundsException(indexError(index));
         }
     }
 
@@ -64,7 +65,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= 0 && index <= size) {
             return array[index];
         } else {
-            throw new ArrayIndexOutOfBoundsException(indexError());
+            throw new ArrayIndexOutOfBoundsException(indexError(index));
         }
     }
 
@@ -73,7 +74,7 @@ public class ArrayList<T> implements List<T> {
         if (index >= 0 && index <= size) {
             array[index] = element;
         } else {
-            throw new ArrayIndexOutOfBoundsException(indexError());
+            throw new ArrayIndexOutOfBoundsException(indexError(index));
         }
     }
 
@@ -124,7 +125,7 @@ public class ArrayList<T> implements List<T> {
     public String toString() {
         StringJoiner joiner = new StringJoiner(", ", "[", "]");
         for (T element : this) {
-            joiner.add(element.toString());
+            joiner.add(String.valueOf(element.toString()));
         }
         return joiner.toString();
     }
@@ -138,25 +139,51 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private String indexError() {
-        return String.format("Error, index: \nless than => \"0\" or more than => \"%d\".", size + 1);
+    private String indexAddError(int index) {
+        return String.format("Error, index: %d;\nIndex less than => \"0\" or more than => \"%d\".", index, size);
+    }
+
+    private String indexError(int index) {
+        return String.format("Error, index: %d;\nIndex less than => \"0\" or more than => \"%d\".", index, size - 1);
     }
 
     @Override
-    public MyIterator iterator() {
+    public Iterator<T> iterator() {
         return new MyIterator();
     }
 
     private class MyIterator implements Iterator<T> {
         private int index;
+        private boolean canRemove = false;
 
+        @Override
         public boolean hasNext() {
-            return index < size;
+            return index != size;
         }
 
+        @Override
         public T next() {
-            return array[index++];
+            if (!hasNext()) {
+                throw new NoSuchElementException("The end.");
+            } else {
+                T element = array[index];
+                canRemove = true;
+                index++;
+                return element;
+            }
         }
+
+        @Override
+        public void remove() {
+            if (!canRemove) {
+                throw new UnsupportedOperationException("Nothing to remove.");
+            } else {
+                ArrayList.this.remove(index);
+                size--;
+            }
+
+        }
+
     }
 }
 

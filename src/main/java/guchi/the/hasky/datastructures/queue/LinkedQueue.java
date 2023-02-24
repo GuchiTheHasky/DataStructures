@@ -1,9 +1,33 @@
 package guchi.the.hasky.datastructures.queue;
 
 
+import java.util.Iterator;
 import java.util.Objects;
 
 public class LinkedQueue<E> implements Queue<E> {
+    @Override
+    public Iterator<E> iterator() {
+        return new Iterator<E>() {
+            Node<E> current = first;
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public E next() {
+                E element = current.element;
+                current = current.next;
+                return element;
+            }
+
+            @Override
+            public void remove() {
+               // Iterator.super.remove();
+            }
+        };
+    }
+
     private static class Node<E>{
         E element;
         Node<E> next;

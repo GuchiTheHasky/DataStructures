@@ -1,12 +1,20 @@
 package guchi.the.hasky.datastructures.list;
 
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Iterator;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+/**
+ * @author GuchiTheHasky
+ * @since 2023
+ */
 
 public abstract class AbstractListTest {
 
@@ -450,6 +458,15 @@ public abstract class AbstractListTest {
         list.add("doo");
         String result = list.toString();
         assertEquals("[Scooby, dooby, doo]", result);
+    }
+    @DisplayName("Test: Does iterator, works correctly?")
+    @Test
+    public void checkOfIteratorWorks(){
+        list.add("Scooby");
+        list.add("dooby");
+        list.add("doo");
+
+        Iterator<String> iterator =  list.iterator();
     }
 
 }

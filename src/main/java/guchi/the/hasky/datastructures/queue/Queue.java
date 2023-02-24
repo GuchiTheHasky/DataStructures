@@ -1,6 +1,6 @@
 package guchi.the.hasky.datastructures.queue;
 
-public interface Queue <E> {
+public interface Queue <E> extends Iterable<E> {
     void enqueue(E element);
     E dequeue();
     E peek();

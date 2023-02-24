@@ -1,6 +1,6 @@
 package guchi.the.hasky.datastructures.list;
 
-import java.util.Objects;
+import java.util.Iterator;
 import java.util.StringJoiner;
 
 public class LinkedList<T> implements List<T> {
@@ -15,137 +15,84 @@ public class LinkedList<T> implements List<T> {
 
     @Override
     public void add(T element, int index) {
-        if (index < 0 && index > size - 1) {
-            throw new IndexOutOfBoundsException("Index out of bounds.");
-        }
-        Node<T> node = new Node<>(element);
-        if (size == 0) {
-            first = node;
-            last = node;
-        } else if (index == 0) {
-            node.next = first;
-            first.previous = node;
-            first = node;
-        } else if (index == size) {
-            node.previous = last;
-            last.next = node;
-            last = node;
-        } else {
-            Node<T> middleNode = null;
-            if (index  < size / 2) {
-                middleNode = first;
-            for (int i = 0; i < index; i++) {
-                middleNode = middleNode.next;
+        if (index >= 0 && index <= size) {
+            Node<T> node = new Node<>(element);
+            if (size == 0) {
+                first = node;
+                last = node;
             }
-            }
-            else if (index > size / 2) {
-                middleNode = last;
-                for (int i = size - 1; i > index; i--) {
-                    middleNode = middleNode.previous;
+            if (index == 0) {
+                node.next = first;
+                first.previous = node;
+                first = node;
+            } else if (index == size) {
+                node.previous = last;
+                last.next = node;
+                last = node;
+            } else {
+                Node<T> middleNode = null;
+                if (index < size / 2) {
+                    middleNode = first;
+                    for (int i = 0; i < index; i++) {
+                        middleNode = middleNode.next;
+                    }
+                } else if (index > size / 2) {
+                    middleNode = last;
+                    for (int i = size - 1; i > index; i--) {
+                        middleNode = middleNode.previous;
+                    }
                 }
+                node.next = middleNode;
+                assert middleNode != null;
+                node.previous = middleNode.previous;
+                middleNode.previous.next = node;
             }
-            node.next = middleNode;
-            assert middleNode != null;
-            node.previous = middleNode.previous;
-            middleNode.previous.next = node;
-        }
-        size++;
+            size++;
+        } else throw new ArrayIndexOutOfBoundsException(indexError(index));
     }
-    /*    @Override
-    public void add(T element, int index) {
-        if (index < 0 && index > size - 1){
-            throw new IndexOutOfBoundsException("Index out of bound.");
-        }
-        Node<T> node = new Node<>(element);
-        if (first == null){
-            first = last = node;
-        }
-        else if (index == 0){
-            node.next = first;
-            first = node;
-            node.next.previous = node;
-        }
-        else if (index > 0 && index < size - 1) {
-            Node<T> current = getNodeByIndex(index - 1);
-            current.next = node;
-            current.next.previous = getNodeByIndex(index - 1);
-        }
-        else {
-            Node<T> current = getNodeByIndex(index - 1);
-            current.next = node;
-            current.next.previous = getNodeByIndex(index - 1);
-            last = node;
-        }
-        size++;
-    }*/
-
-    /*
-      size == 0
-    * index == 0
-    * index == size
-    * */
 
     @Override
-    public T remove(int index) { // має бути чотири кейси
-        T removedElement = null;
-        if (!isEmpty()) {
-            if (index < 0 && index > size - 1) {
-                throw new IndexOutOfBoundsException(indexError());
-            }
-
+    public T remove(int index) {
+        if (index < 0 || index > size - 1) {
+            throw new ArrayIndexOutOfBoundsException(indexError(index));
+        } else {
+            Node<T> removedElement = getNode(index);
             if (size == 1) {
                 first = null;
                 last = null;
-            }
-            else if (index == 0) {
-                removedElement = first.element;
+            } else if (index == 0) {
+                first.next.previous = null;
                 first = first.next;
+            } else if (index == size - 1) {
+                last.previous.next = null;
+                last = last.previous;
+            } else {
+                Node<T> current = getNode(index);
+                current.previous.next = current.next;
+                current.next.previous = current.previous;
             }
-
             size--;
+            return (T) removedElement;
         }
-        return removedElement;
     }
-
-//    @Override
-//    public T remove(int index) { // має бути чотири кейси
-//        Objects.checkIndex(index, size);
-//        T removedElement;
-//        if (index == 0){
-//            removedElement = first.element;
-//            first = first.next;
-//        } else if (index < size - 1) {
-//            Node<T> previous = getNode(index - 1);
-//            removedElement = previous.next.element;
-//            previous.next = previous.next.next;
-//            if (index == size - 1){
-//                last = previous;
-//            }
-//            previous.next.previous = previous;
-//        }
-//        else {
-//            Node<T> previous = getNode(index - 1);
-//            removedElement = previous.next.element;
-//            previous.next = previous.next.next;
-//            if (index == size - 1){
-//                last = previous;
-//            }
-//        }
-//        size--;
-//        return removedElement;
-//    }
 
     @Override
     public T get(int index) {
-        Objects.checkIndex(index, size);
-        return getNode(index).element;
+        if (index < 0 || index > size - 1) {
+            throw new ArrayIndexOutOfBoundsException(indexError(index));
+        } else {
+            return getNode(index).element;
+        }
     }
 
     @Override
     public void set(T element, int index) {
-        Objects.checkIndex(index, size);
-        Node<T> node = getNode(index);
-        node.element = element;
+        if (index < 0 || index > size - 1) {
+            throw new ArrayIndexOutOfBoundsException(indexError(index));
+        } else {
+            Node<T> node = getNode(index);
+            node.element = element;
+        }
     }
 
     @Override
@@ -183,14 +130,12 @@ public class LinkedList<T> implements List<T> {
 
     @Override
     public int lastIndexOf(T element) {
-        Node<T> current = first;
-        for (int i = 0; i < size; i++) {
-            if (current.element.equals(element) && i == size - 1 ||
-                    current.element.equals(element) && !current.next.element.equals(element)
-            ) {
+        Node<T> current = last;
+        for (int i = size - 1; i >= 0; i--) {
+            if (current.element.equals(element)) {
                 return i;
             }
-            current = current.next;
+            current = current.previous;
         }
         return -1;
     }
@@ -199,47 +144,60 @@ public class LinkedList<T> implements List<T> {
     public String toString() {
         StringJoiner joiner = new StringJoiner(",", "{", "}");
         Node<T> current = first;
-        while (current != null) {
-            joiner.add((CharSequence) current);
-            current = current.next;
-        }
+//        while (current != null) {
+//            joiner.add((CharSequence) current);
+//            current = current.next;
+//        }
+//        return joiner.toString();
+
+        //MyIterator iterator =
         return joiner.toString();
     }
 
-    // написати метод так, щоб не віднімати 1
+
+
+    /*    public String toString() {
+        StringJoiner joiner = new StringJoiner(", ", "[", "]");
+        for (T element : this) {
+            joiner.add(String.valueOf(element.toString()));
+        }
+        return joiner.toString();
+    }*/
+
     private Node<T> getNode(int index) {
         Node<T> current = first;
         for (int i = 0; i < index; i++) {
             current = current.next;
         }
-        return current.previous;
+        return current;
     }
-    private String indexError() {
-        return String.format("Error, index: \nless than => \"0\" or more than => \"%d\".", size + 1);
+
+    private String indexError(int index) {
+        return String.format("Error, index: %d;\nIndex less than => \"0\" or more than => \"%d\".", index, size - 1);
     }
 
 
     @Override
-    public java.util.Iterator<T> iterator() {
+    public MyIterator iterator() {
         return null;
     }
 
-//    @SuppressWarnings("unchecked")
-//    private class Iterator<T> implements MyIterator<T>{
-//        private Node<T> current = (Node<T>) first;
-//
-//        @Override
-//        public boolean hasNext() {
-//            return current != null;
-//        }
-//
-//        @Override
-//        public T next() {
-//            T element = current.element;
-//            current = current.next;
-//            return element;
-//        }
-//    }
+
+    private class MyIterator implements Iterator<T>{
+        private Node<T> current = first;
+
+        @Override
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        @Override
+        public T next() {
+            T element = current.element;
+            current = current.next;
+            return element;
+        }
+    }
 
 
     private static class Node<T> {

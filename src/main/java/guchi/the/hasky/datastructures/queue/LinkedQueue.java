@@ -2,31 +2,10 @@ package guchi.the.hasky.datastructures.queue;
 
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public class LinkedQueue<E> implements Queue<E> {
-    @Override
-    public Iterator<E> iterator() {
-        return new Iterator<E>() {
-            Node<E> current = first;
-            @Override
-            public boolean hasNext() {
-                return current != null;
-            }
-
-            @Override
-            public E next() {
-                E element = current.element;
-                current = current.next;
-                return element;
-            }
-
-            @Override
-            public void remove() {
-               // Iterator.super.remove();
-            }
-        };
-    }
 
     private static class Node<E>{
         E element;
@@ -36,7 +15,6 @@ public class LinkedQueue<E> implements Queue<E> {
             this.element = element;
         }
     }
-
 
     private Node<E> first;
     int size;
@@ -95,4 +73,45 @@ public class LinkedQueue<E> implements Queue<E> {
         first = null;
         size = 0;
     }
+        @Override
+    public Iterator<E> iterator() {
+            return new QueueIterator();
+        }
+        private class QueueIterator implements Iterator<E> {
+            Node<E> current = first;
+            private boolean canRemove;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public E next() {
+                if (!hasNext()){
+                    throw new NoSuchElementException("It's an emptiness.");
+                }
+                E element = current.element;
+                canRemove = true;
+                current = current.next;
+                return element;
+            }
+
+            @Override
+            public void remove() {
+                if (!canRemove) {
+                    throw new IllegalStateException("Nothing to remove.");
+                }
+                removeNode(current);
+            }
+        }
+
+        private E removeNode(Node<E> node) {
+            node.element = first.element;
+            first = first.next;
+            size--;
+            return node.element;
+        }
+
+
 }

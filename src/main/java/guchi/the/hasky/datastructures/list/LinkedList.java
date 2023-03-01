@@ -1,7 +1,13 @@
 package guchi.the.hasky.datastructures.list;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.StringJoiner;
+
+/**
+ * @author GuchiTheHasky
+ * @since 2023
+ */
 
 public class LinkedList<T> implements List<T> {
     private Node<T> first;
@@ -18,10 +24,8 @@ public class LinkedList<T> implements List<T> {
         if (index >= 0 && index <= size) {
             Node<T> node = new Node<>(element);
             if (size == 0) {
-                first = node;
-                last = node;
-            }
-            if (index == 0) {
+                first = last = node;
+            } else if (index == 0) {
                 node.next = first;
                 first.previous = node;
                 first = node;
@@ -30,25 +34,15 @@ public class LinkedList<T> implements List<T> {
                 last.next = node;
                 last = node;
             } else {
-                Node<T> middleNode = null;
-                if (index < size / 2) {
-                    middleNode = first;
-                    for (int i = 0; i < index; i++) {
-                        middleNode = middleNode.next;
-                    }
-                } else if (index > size / 2) {
-                    middleNode = last;
-                    for (int i = size - 1; i > index; i--) {
-                        middleNode = middleNode.previous;
-                    }
-                }
-                node.next = middleNode;
-                assert middleNode != null;
-                node.previous = middleNode.previous;
-                middleNode.previous.next = node;
+                Node<T> current = getNode(index);
+                node.next = current;
+                node.previous = current.previous;
+                current.previous.next = node;
             }
             size++;
-        } else throw new ArrayIndexOutOfBoundsException(indexError(index));
+        } else {
+            throw new ArrayIndexOutOfBoundsException(indexAddError(index));
+        }
     }
 
     @Override
@@ -80,18 +74,19 @@ public class LinkedList<T> implements List<T> {
     public T get(int index) {
         if (index < 0 || index > size - 1) {
             throw new ArrayIndexOutOfBoundsException(indexError(index));
-        } else {
-            return getNode(index).element;
         }
+        return getNode(index).element;
     }
 
     @Override
-    public void set(T element, int index) {
+    public T set(T element, int index) {
         if (index < 0 || index > size - 1) {
             throw new ArrayIndexOutOfBoundsException(indexError(index));
         } else {
             Node<T> node = getNode(index);
+            T resetNode = node.element;
             node.element = element;
+            return resetNode;
         }
     }
 
@@ -142,49 +137,21 @@ public class LinkedList<T> implements List<T> {
 
     @Override
     public String toString() {
-        StringJoiner joiner = new StringJoiner(",", "{", "}");
-        Node<T> current = first;
-//        while (current != null) {
-//            joiner.add((CharSequence) current);
-//            current = current.next;
-//        }
-//        return joiner.toString();
-
-        //MyIterator iterator =
-        return joiner.toString();
-    }
-
-
-
-    /*    public String toString() {
         StringJoiner joiner = new StringJoiner(", ", "[", "]");
         for (T element : this) {
-            joiner.add(String.valueOf(element.toString()));
+            joiner.add(String.valueOf(element));
         }
         return joiner.toString();
-    }*/
-
-    private Node<T> getNode(int index) {
-        Node<T> current = first;
-        for (int i = 0; i < index; i++) {
-            current = current.next;
-        }
-        return current;
     }
-
-    private String indexError(int index) {
-        return String.format("Error, index: %d;\nIndex less than => \"0\" or more than => \"%d\".", index, size - 1);
-    }
-
 
     @Override
-    public MyIterator iterator() {
-        return null;
+    public Iterator<T> iterator() {
+        return new ListIterator();
     }
 
-
-    private class MyIterator implements Iterator<T>{
+    private class ListIterator implements Iterator<T> {
         private Node<T> current = first;
+        private boolean canRemove;
 
         @Override
         public boolean hasNext() {
@@ -193,20 +160,74 @@ public class LinkedList<T> implements List<T> {
 
         @Override
         public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException("It's an emptiness.");
+            }
             T element = current.element;
             current = current.next;
+            canRemove = true;
             return element;
+        }
+
+        @Override
+        public void remove() {
+            if (!canRemove) {
+                throw new IllegalStateException("Nothing to remove.");
+            }
+            removeNode(current);
         }
     }
 
+    private String indexError(int index) {
+        return String.format("Error, index: %d;\nIndex less than => \"0\" or more than => \"%d\".", index, size - 1);
+    }
+
+    private String indexAddError(int index) {
+        return String.format("Error, index: %d;\nIndex less than => \"0\" or more than => \"%d\".", index, size);
+    }
+
+    private Node<T> getNode(int index) {
+        Node<T> current;
+        if (index <= size / 2) {
+            current = first;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = last;
+            for (int i = size - 1; i > index; i--) {
+                current = current.previous;
+            }
+        }
+        return current;
+    }
+
+    private T removeNode(Node<T> node) {
+        if (size == 1) {
+            first = null;
+            last = null;
+        } else if (node == first) {
+            first = node.next;
+            first.previous = null;
+        } else if (node == last) {
+            last = node.previous;
+            last.previous = null;
+        } else {
+            node = first.next;
+            node.next.previous = node.previous;
+        }
+        size--;
+        return (T) node;
+    }
 
     private static class Node<T> {
         private T element;
         private Node<T> next;
         private Node<T> previous;
 
-        public Node(T element) {
+        private Node(T element) {
             this.element = element;
         }
     }
+
 }

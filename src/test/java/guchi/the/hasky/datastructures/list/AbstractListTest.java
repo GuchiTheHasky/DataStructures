@@ -1,12 +1,12 @@
 package guchi.the.hasky.datastructures.list;
 
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,17 +31,11 @@ public abstract class AbstractListTest {
     @Test
     public void addElementsAndCheckSizeOfList() {
         list.add("Gimli");
-        assertEquals(1, list.size());
-
         list.add("Legolas");
-        assertEquals(2, list.size());
-
         list.add("Gandalf");
         assertEquals(3, list.size());
 
         list.add("Aragorn");
-        assertEquals(4, list.size());
-
         list.add("Frodo");
         assertEquals(5, list.size());
     }
@@ -56,7 +50,7 @@ public abstract class AbstractListTest {
         list.add("S", 0);
 
         assertEquals("S", list.get(0));
-        assertEquals( 4, list.size());
+        assertEquals(4, list.size());
     }
 
     @DisplayName("Test, add an element in the middle of list and check size.")
@@ -89,7 +83,7 @@ public abstract class AbstractListTest {
 
     @DisplayName("Test, add element in list with less than zero index.")
     @Test
-    public void addElementWithIndexLessThanZeroAndCheckSize() { //+
+    public void addElementWithIndexLessThanZeroAndCheckSize() {
         list.add("Scooby");
         list.add("dooby");
         list.add("doo");
@@ -104,7 +98,7 @@ public abstract class AbstractListTest {
 
     @DisplayName("Test, add element in the end of list.")
     @Test
-    public void addElementInTheEndOfListAndCheckSize(){
+    public void addElementInTheEndOfListAndCheckSize() {
         list.add("Scooby");
         list.add("dooby");
         list.add("doo", list.size());
@@ -220,7 +214,6 @@ public abstract class AbstractListTest {
 
         assertEquals("Dumbledore", list.get(4));
         assertEquals(5, list.size());
-
     }
 
     @DisplayName("Test, get middle element from list.")
@@ -234,7 +227,6 @@ public abstract class AbstractListTest {
 
         assertEquals("Wulfric", list.get(2));
         assertEquals(5, list.size());
-
     }
 
     @DisplayName("Test, try to get element with out of bounds index.")
@@ -271,7 +263,7 @@ public abstract class AbstractListTest {
         assertEquals(5, list.size());
     }
 
-    @DisplayName("Test, set first element in list.")
+    @DisplayName("Test, set first element in list & get previous element.")
     @Test
     public void setFirstElementInListAndCheckSize() {
         list.add("Harry");
@@ -280,13 +272,13 @@ public abstract class AbstractListTest {
         list.add("Brian");
         list.add("Dumbledore");
 
-        list.set("Albus", 0);
+        assertEquals("Harry", list.set("Albus", 0));
 
         assertEquals("Albus", list.get(0));
         assertEquals(5, list.size());
     }
 
-    @DisplayName("Test, set last element in list.")
+    @DisplayName("Test, set last element in list & get previous element.")
     @Test
     public void setLastElementInListAndCheckSize() {
         list.add("Albus");
@@ -295,13 +287,13 @@ public abstract class AbstractListTest {
         list.add("Brian");
         list.add("Potter");
 
-        list.set("Dumbledore", 4);
+        assertEquals("Potter", list.set("Dumbledore", 4));
 
         assertEquals("Dumbledore", list.get(4));
         assertEquals(5, list.size());
     }
 
-    @DisplayName("Test, set middle element in list.")
+    @DisplayName("Test, set middle element in list & get previous element.")
     @Test
     public void setMiddleElementInListAndCheckSize() {
         list.add("Albus");
@@ -310,7 +302,7 @@ public abstract class AbstractListTest {
         list.add("Brian");
         list.add("Dumbledore");
 
-        list.set("Wulfric", 2);
+        assertEquals("Severus", list.set("Wulfric", 2));
 
         assertEquals("Wulfric", list.get(2));
         assertEquals(5, list.size());
@@ -459,14 +451,62 @@ public abstract class AbstractListTest {
         String result = list.toString();
         assertEquals("[Scooby, dooby, doo]", result);
     }
-    @DisplayName("Test: Does iterator, works correctly?")
+
+    @DisplayName("Test: iterator has next element: false. ")
     @Test
-    public void checkOfIteratorWorks(){
+    public void checkOfIteratorHasNextElementFalse() {
+        Iterator<String> iterator = list.iterator();
+        assertFalse(iterator.hasNext());
+    }
+
+    @DisplayName("Test: iterator method next(), works correctly: true. ")
+    @Test
+    public void testIteratorMethodNextElementWorkCorrectly() {
         list.add("Scooby");
         list.add("dooby");
         list.add("doo");
 
-        Iterator<String> iterator =  list.iterator();
+        Iterator<String> iterator = list.iterator();
+
+        assertEquals("Scooby", iterator.next());
+        assertEquals("dooby", iterator.next());
+        assertEquals("doo", iterator.next());
     }
 
+    @DisplayName("Test, throw new NoSuchElementException in Iterator, method next().")
+    @Test
+    public void testThrowNoSuchElementExceptionInIteratorMethodNext() {
+        Iterator<String> iterator = list.iterator();
+        Throwable thrown = assertThrows(NoSuchElementException.class, iterator::next);
+        assertNotNull(thrown.getMessage());
+    }
+
+    @DisplayName("Test: iterator method remove(), works correctly: true. ")
+    @Test
+    public void removeElementsFromListWithIterator() {
+        list.add("Scooby");
+        list.add("dooby");
+        list.add("doo");
+
+        Iterator<String> iterator = list.iterator();
+
+        assertEquals("Scooby", iterator.next());
+        assertEquals("dooby", iterator.next());
+        assertEquals("doo", iterator.next());
+
+        iterator.remove();
+        iterator.remove();
+        assertFalse(list.isEmpty());
+
+        iterator.remove();
+        assertTrue(list.isEmpty());
+    }
+
+    @DisplayName("Test, throw new IllegalStateException in Iterator method: remove().")
+    @Test
+    public void testThrowIllegalStateExceptionInIteratorMethodRemove() {
+        Iterator<String> iterator = list.iterator();
+        Throwable thrown = assertThrows(IllegalStateException.class, iterator::remove);
+        assertNotNull(thrown.getMessage());
+    }
 }

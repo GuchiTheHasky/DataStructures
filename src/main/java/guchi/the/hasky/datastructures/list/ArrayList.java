@@ -4,6 +4,11 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.StringJoiner;
 
+/**
+ * @author GuchiTheHasky
+ * @since 2023
+ */
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final double DEFAULT_RISE_VALUE = 1.5;
@@ -20,7 +25,6 @@ public class ArrayList<T> implements List<T> {
         this(initCapacity, DEFAULT_RISE_VALUE);
     }
 
-    @SuppressWarnings("unchecked")
     public ArrayList(int initCapacity, double riseValue) {
         if (initCapacity < 0) {
             System.out.println("List size, can't be less than zero.");
@@ -49,7 +53,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index <= size) {
+        if (index >= 0 && index < size) {
             T element = array[index];
             System.arraycopy(array, index + 1, array, index, size - index - 1);
             array[size - 1] = null;
@@ -70,9 +74,11 @@ public class ArrayList<T> implements List<T> {
     }
 
     @Override
-    public void set(T element, int index) {
+    public T set(T element, int index) {
         if (index >= 0 && index <= size) {
+            T resetElement = array[index];
             array[index] = element;
+            return resetElement;
         } else {
             throw new ArrayIndexOutOfBoundsException(indexError(index));
         }
@@ -130,7 +136,6 @@ public class ArrayList<T> implements List<T> {
         return joiner.toString();
     }
 
-    @SuppressWarnings("unchecked")
     private void rise() {
         if (array.length == size) {
             T[] tempArray = (T[]) new Object[(int) (size * riseValue)];
@@ -154,11 +159,10 @@ public class ArrayList<T> implements List<T> {
 
     private class MyIterator implements Iterator<T> {
         private int index;
-        private boolean canRemove = false;
 
         @Override
         public boolean hasNext() {
-            return index != size;
+            return index < size;
         }
 
         @Override
@@ -167,7 +171,6 @@ public class ArrayList<T> implements List<T> {
                 throw new NoSuchElementException("The end.");
             } else {
                 T element = array[index];
-                canRemove = true;
                 index++;
                 return element;
             }
@@ -175,13 +178,11 @@ public class ArrayList<T> implements List<T> {
 
         @Override
         public void remove() {
-            if (!canRemove) {
-                throw new UnsupportedOperationException("Nothing to remove.");
+            if (index == 0) {
+                throw new IllegalStateException("Nothing to remove.");
             } else {
-                ArrayList.this.remove(index);
-                size--;
+                ArrayList.this.remove(--index);
             }
-
         }
 
     }

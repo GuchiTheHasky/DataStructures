@@ -1,7 +1,6 @@
 package guchi.the.hasky.datastructures.map;
 
-import guchi.the.hasky.datastructures.map.HashMap;
-import guchi.the.hasky.datastructures.map.Map;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +10,7 @@ public class HashMapTest {
 
     @DisplayName("Test, put Entry<Integer, String> in HashMap & check size.")
     @Test
-    public void putIntString(){
+    public void putIntString() {
         HashMap<Integer, String> map = new HashMap<>();
         map.put(5, "Fifth");
         map.put(2, "Second");
@@ -26,9 +25,10 @@ public class HashMapTest {
 
         assertEquals(5, map.size());
     }
+
     @DisplayName("Test, put Entry<String, String> in HashMap & check size.")
     @Test
-    public void putStringString(){
+    public void putStringString() {
         Map<String, String> map = new HashMap<>();
         map.put("A", "First");
         map.put("C", "Second");
@@ -45,7 +45,7 @@ public class HashMapTest {
 
     @DisplayName("Test, put the same key & check size.")
     @Test
-    public void putTheSameKey(){
+    public void putTheSameKey() {
         Map<String, String> map = new HashMap<>();
         map.put("A", "First");
         map.put("C", "Second");
@@ -58,7 +58,7 @@ public class HashMapTest {
 
     @DisplayName("Test, get entry from HashMap.")
     @Test
-    public void get(){
+    public void get() {
         Map<Integer, String> map = new HashMap<>();
         map.put(1, "First");
         map.put(2, "Second");
@@ -69,41 +69,10 @@ public class HashMapTest {
         assertEquals("Second", map.get(2));
         assertEquals("Fourth", map.get(4));
     }
-    @DisplayName("Test, is empty map: True.")
-    @Test
-    public void isEmptyTrue(){
-        Map<Integer, String> map = new HashMap<>();
-        map.put(1, "First");
-        map.put(2, "Second");
-        map.put(3, "Third");
-
-        map.remove(1);
-        map.remove(2);
-        map.remove(3);
-
-        assertTrue(map.isEmpty());
-    }
-
-    @DisplayName("Test, is empty map: False.")
-    @Test
-    public void isEmptyFalse(){
-        Map<Integer, String> map = new HashMap<>();
-        map.put(1, "First");
-        map.put(2, "Second");
-        map.put(3, "Third");
-        map.put(4, "Fourth");
-        map.put(5, "Fifth");
-
-        map.remove(1);
-        map.remove(2);
-        map.remove(3);
-
-        assertFalse(map.isEmpty());
-    }
 
     @DisplayName("Test, contains key: True.")
     @Test
-    public void containsTrue(){
+    public void containsTrue() {
         Map<Integer, String> map = new HashMap<>();
         map.put(1, "First");
         map.put(2, "Second");
@@ -118,7 +87,7 @@ public class HashMapTest {
 
     @DisplayName("Test, contains key: False.")
     @Test
-    public void containsFalse(){
+    public void containsFalse() {
         Map<Integer, String> map = new HashMap<>();
         map.put(1, "First");
         map.put(2, "Second");

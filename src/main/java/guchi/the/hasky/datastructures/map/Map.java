@@ -1,17 +1,22 @@
 package guchi.the.hasky.datastructures.map;
 
-public interface Map <K, V> {
-        V put(K key, V value);
+import java.util.Iterator;
 
-        V get(K key);
+public interface Map<K, V> extends Iterable {
+    V put(K key, V value);
 
-        int size();
+    V get(K key);
 
-        boolean isEmpty();
+    int size();
 
-        V remove(K key);
+    V remove(K key);
 
-        boolean containsKey(K key);
-        void printValues();
+    boolean containsKey(K key);
+
+    void printValues();
+
+    default Iterator iterator() {
+        return null;
+    }
 
 }

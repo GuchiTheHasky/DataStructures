@@ -3,106 +3,91 @@ package guchi.the.hasky.datastructures.map;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HashMap<K, V> implements Map<K, V> {
-
-    public static final int DEFAULT_CAPACITY = 16;
-    private ArrayList<Entry<K,V>>[] buckets;
-
-    // array length = 5
+    public static final int DEFAULT_CAPACITY = 5;
+    private List<Entry<K, V>>[] buckets;
     private int size;
-    private Entry<K, V>[] entries = new Entry[DEFAULT_CAPACITY];
 
     public HashMap() {
+        this(DEFAULT_CAPACITY);
+        this.buckets[0] = new ArrayList<>(16);
+        this.buckets[1] = new ArrayList<>(16);
+        this.buckets[2] = new ArrayList<>(16);
+        this.buckets[3] = new ArrayList<>(16);
+        this.buckets[4] = new ArrayList<>(16);
     }
 
-    // key hashcode() % array.length() => index
-    // array.length() = 5
-    // 5%7 == 5
-    // 10%7 == 3
-
+    @SuppressWarnings("unchecked")
+    public HashMap(int initCapacity) {
+        this.buckets = new ArrayList[initCapacity];
+    }
 
 
     @Override
     public V put(K key, V value) {
         int bucketIndex = getIndex(key);
-        ArrayList<Entry<K,V>> entryList = buckets[bucketIndex];
-        for (Entry<K,V> entry : entryList){
-                if (entry.key.equals(key)) {
-                    entry.value = value;
-                    return null;
-                }
+        if (!validateIndex(bucketIndex)) {
+            throw new IndexOutOfBoundsException(errorPutIndex(bucketIndex));
+        } else if (!containsKey(key)) {
+            Entry<K, V> entry = new Entry<>(key, value);
+            List<Entry<K, V>> entriesList = buckets[bucketIndex];
+            entriesList.add(entry);
+            size++;
+            return entry.value;
         }
-        entryList.add(new Entry<>(key, value));
         return null;
     }
-
-
-        /*
-
-        //old version put()
-//        if (!isKeyExist(key)) {
-//            rise();
-//            Entry<K, V> entry = new Entry(key, value);
-//            entries[size] = entry;
-//            size++;
-//            sortEntryMap();
-//            return (V) entry;
-//        }
-//        return null;*/
 
     @Override
-    public V get(K key) { // key == array[index]  ->  key.hashCode() % array.length == index
+    public V get(K key) {
         int bucketIndex = getIndex(key);
-        List<Entry<K,V>> entryList = buckets[bucketIndex];
-        for (Entry<K,V> entry : entryList){
-            if (entry.key.equals(key)) {
-                return entry.value;
-            }
+        if (!validateIndex(bucketIndex)) {
+            throw new IndexOutOfBoundsException(errorPutIndex(bucketIndex));
         }
+            List<Entry<K, V>> currentList = buckets[bucketIndex];
+            for (Entry<K, V> entry : currentList) {
+                if (entry.key.equals(key)) {
+                    return entry.value;
+                }
+            }
+
         return null;
     }
-
-    /* old get()
-    * //        for (int i = 0; i < size; i++) {
-//            if (entries[i].key.equals(key)) {
-//                return entries[i].value;
-//            }
-//        }
-//        return null;*/
-
-    private int getIndex(K key) {
-        return 0;
-    }
-
-
 
     @Override
     public boolean containsKey(K key) {
-        for (int i = 0; i < size; i++) {
-            if (entries[i].key.equals(key)) {
-                return true;
-            }
+        int bucketIndex = getIndex(key);
+        if (!validateIndex(bucketIndex)) {
+            throw new IndexOutOfBoundsException(errorPutIndex(bucketIndex));
         }
+
+            List<Entry<K, V>> currentList = buckets[bucketIndex];
+            for (int i = 0; i < currentList.size(); i++) {
+                if (currentList.get(i).key.equals(key)) {
+                    return true;
+                }
+            }
+
         return false;
     }
-    @SuppressWarnings("unchecked")
+
+    @SuppressWarnings("uncheked")
     @Override
     public V remove(K key) {
-        for (int i = 0; i < size; i++) {
-            if (entries[i].key.equals(key)) {
-                Entry<K, V> deletedEntry = entries[i];
-                Entry<K, V>[] tempEntries = (Entry<K, V>[]) new Entry[size - 1];
-                int count = 0;
-                for (int j = 0; j < size; j++) {
-                    if (j != i) {
-                        tempEntries[count] = entries[j];
-                        count++;
-                    }
-                }
+        int bucketIndex = getIndex(key);
+        if (!validateIndex(bucketIndex)) {
+            throw new IndexOutOfBoundsException(errorPutIndex(bucketIndex));
+        }
+        List<Entry<K, V>> currentList = buckets[bucketIndex];
+
+        for (Entry<K, V> entry : currentList) {
+            if (Objects.equals(entry.key, key)) {
+                V removedEntry = entry.value;
+                currentList.remove(entry);
                 size--;
-                entries = tempEntries;
-                return deletedEntry.value;
+                return removedEntry;
             }
         }
         return null;
@@ -113,50 +98,22 @@ public class HashMap<K, V> implements Map<K, V> {
         return size;
     }
 
-
-    public void printValues() {
-            for (Entry<K, V> entry : entries) {
-                System.out.print(entry.value + " ");
+    private int getIndex(K key) {
+        if (key != null) {
+            return key.hashCode() % buckets.length;
         }
+        return -1;
     }
 
-
-    @SuppressWarnings("unchecked")
-    private void rise() {
-        if (size == DEFAULT_CAPACITY) {
-            Entry<K, V>[] tempEntries = (Entry<K, V>[]) new Object[size * 2];
-            System.arraycopy(entries, 0, tempEntries, 0, size);
-            entries = tempEntries;
-        }
+    private boolean validateIndex(int index) {
+        return index >= 0 && index < DEFAULT_CAPACITY;
     }
 
-    private void sortEntryMap() {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (getCharAtValueInt(entries[i].key) < getCharAtValueInt(entries[j].key)) {
-                    Entry<K, V> temp = entries[i];
-                    entries[i] = entries[j];
-                    entries[j] = temp;
-                }
-            }
-        }
+    private String errorPutIndex(int index) {
+        return String.format("Index %d, can't be less than: 0 & more than: %d.", index, DEFAULT_CAPACITY - 1);
     }
 
-    private int getCharAtValueInt(K key) {
-        String str = key.toString();
-        return str.charAt(0);
-    }
-
-    private boolean isKeyExist(K key) {
-        for (int i = 0; i < size; i++) {
-            if (entries[i].key.equals(key)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    static class Entry<K, V> {
+    private static class Entry<K, V> {
         private K key;
         private V value;
 
@@ -165,5 +122,6 @@ public class HashMap<K, V> implements Map<K, V> {
             this.value = value;
         }
     }
-}
 
+
+}

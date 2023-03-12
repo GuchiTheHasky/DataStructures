@@ -1,106 +1,107 @@
 package guchi.the.hasky.datastructures.map;
 
-
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 public class HashMapTest {
+    HashMap<String, String> myMap;
 
-    @DisplayName("Test, put Entry<Integer, String> in HashMap & check size.")
-    @Test
-    public void putIntString() {
-        HashMap<Integer, String> map = new HashMap<>();
-        map.put(5, "Fifth");
-        map.put(2, "Second");
-        map.put(3, "Third");
-        map.put(4, "Fourth");
-        map.put(1, "First");
-
-
-        assertEquals("First", map.get(1));
-        assertEquals("Fifth", map.get(5));
-        assertEquals("Third", map.get(3));
-
-        assertEquals(5, map.size());
+    @BeforeEach
+    void init() {
+        myMap = new HashMap<>();
     }
 
-    @DisplayName("Test, put Entry<String, String> in HashMap & check size.")
     @Test
-    public void putStringString() {
-        Map<String, String> map = new HashMap<>();
-        map.put("A", "First");
-        map.put("C", "Second");
-        map.put("B", "Third");
-        map.put("E", "Fourth");
-        map.put("D", "Fifth");
+    public void testPut() {
+        myMap.put("Guchi", "Hasky");
+        myMap.put("Archi", "Labrador");
+        myMap.put("Dina", "Staf");
 
-        assertEquals("First", map.get("A"));
-        assertEquals("Fifth", map.get("D"));
-        assertEquals("Third", map.get("B"));
-
-        assertEquals(5, map.size());
+        assertEquals(3, myMap.size());
     }
 
-    @DisplayName("Test, put the same key & check size.")
     @Test
-    public void putTheSameKey() {
-        Map<String, String> map = new HashMap<>();
-        map.put("A", "First");
-        map.put("C", "Second");
-        map.put("A", "Third");
-        map.put("E", "Fourth");
-        map.put("A", "Fifth");
+    public void testPutDoubleValue() {
+        myMap.put("Guchi", "Hasky");
+        myMap.put("Archi", "Labrador");
+        myMap.put("Dina", "Staf");
+        myMap.put("Dina", "Staf");
 
-        assertEquals(3, map.size());
+        assertEquals(3, myMap.size());
     }
 
-    @DisplayName("Test, get entry from HashMap.")
     @Test
-    public void get() {
-        Map<Integer, String> map = new HashMap<>();
-        map.put(1, "First");
-        map.put(2, "Second");
-        map.put(3, "Third");
-        map.put(4, "Fourth");
-        map.put(5, "Fifth");
-
-        assertEquals("Second", map.get(2));
-        assertEquals("Fourth", map.get(4));
+    public void testGetFirst() {
+        myMap.put("Guchi", "Hasky");
+        myMap.put("Archi", "Labrador");
+        myMap.put("Dina", "Staf");
+        String expected = "Hasky";
+        String actual = myMap.get("Guchi");
+        assertEquals(expected, actual);
     }
 
-    @DisplayName("Test, contains key: True.")
     @Test
-    public void containsTrue() {
-        Map<Integer, String> map = new HashMap<>();
-        map.put(1, "First");
-        map.put(2, "Second");
-        map.put(3, "Third");
-        map.put(4, "Fourth");
-        map.put(5, "Fifth");
-
-        assertTrue(map.containsKey(2));
-        assertTrue(map.containsKey(5));
-        assertTrue(map.containsKey(1));
+    public void testGetMiddle() {
+        myMap.put("Guchi", "Hasky");
+        myMap.put("Archi", "Labrador");
+        myMap.put("Dina", "Staf");
+        String expected = "Labrador";
+        String actual = myMap.get("Archi");
+        assertEquals(expected, actual);
     }
 
-    @DisplayName("Test, contains key: False.")
     @Test
-    public void containsFalse() {
-        Map<Integer, String> map = new HashMap<>();
-        map.put(1, "First");
-        map.put(2, "Second");
-        map.put(3, "Third");
-        map.put(4, "Fourth");
-        map.put(5, "Fifth");
-
-        assertFalse(map.containsKey(0));
-        assertFalse(map.containsKey(-5));
-        assertFalse(map.containsKey(9));
+    public void testGetLast() {
+        myMap.put("Guchi", "Hasky");
+        myMap.put("Archi", "Labrador");
+        myMap.put("Dina", "Staf");
+        String expected = "Staf";
+        String actual = myMap.get("Dina");
+        assertEquals(expected, actual);
     }
+
+    @Test
+    public void testContainsKeyTrue() {
+        myMap.put("Guchi", "Hasky");
+        myMap.put("Archi", "Labrador");
+        myMap.put("Dina", "Staf");
+
+        assertTrue(myMap.containsKey("Guchi"));
+        assertTrue(myMap.containsKey("Archi"));
+        assertTrue(myMap.containsKey("Dina"));
+    }
+    @Test
+    public void testContainsKeyFalse() {
+        myMap.put("Guchi", "Hasky");
+        myMap.put("Archi", "Labrador");
+        myMap.put("Dina", "Staf");
+
+        assertFalse(myMap.containsKey("Hasky"));
+        assertFalse(myMap.containsKey("Staf"));
+    }
+
+    @Test
+    public void testRemove() {
+        myMap.put("Guchi", "Hasky");
+        myMap.put("Archi", "Labrador");
+        myMap.put("Dina", "Staf");
+        assertEquals(3, myMap.size());
+
+        myMap.remove("Guchi");
+        assertEquals(2, myMap.size());
+
+        myMap.remove("Archi");
+        assertEquals(1, myMap.size());
+
+        myMap.remove("Dina");
+        assertEquals(0, myMap.size());
+    }
+
+
+
+
 
 }
-
-
-

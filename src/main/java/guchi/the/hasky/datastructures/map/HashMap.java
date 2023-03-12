@@ -16,6 +16,12 @@ public class HashMap<K, V> implements Map<K, V> {
     public HashMap() {
     }
 
+    // key hashcode() % array.length() => index
+    // array.length() = 5
+    // 5%7 == 5
+    // 10%7 == 3
+
+
 
     @Override
     public V put(K key, V value) {
@@ -31,11 +37,8 @@ public class HashMap<K, V> implements Map<K, V> {
         return null;
     }
 
-    private int getIndex(K key) {
-        return 0;
-    }
 
-    /*
+        /*
 
         //old version put()
 //        if (!isKeyExist(key)) {
@@ -47,6 +50,7 @@ public class HashMap<K, V> implements Map<K, V> {
 //            return (V) entry;
 //        }
 //        return null;*/
+
     @Override
     public V get(K key) { // key == array[index]  ->  key.hashCode() % array.length == index
         int bucketIndex = getIndex(key);
@@ -66,6 +70,13 @@ public class HashMap<K, V> implements Map<K, V> {
 //            }
 //        }
 //        return null;*/
+
+    private int getIndex(K key) {
+        return 0;
+    }
+
+
+
     @Override
     public boolean containsKey(K key) {
         for (int i = 0; i < size; i++) {
@@ -102,7 +113,7 @@ public class HashMap<K, V> implements Map<K, V> {
         return size;
     }
 
-    @Override
+
     public void printValues() {
             for (Entry<K, V> entry : entries) {
                 System.out.print(entry.value + " ");

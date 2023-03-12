@@ -9,29 +9,25 @@ public interface List<T> extends Iterable<T> {
 
     /**
      * Add new element in List by index
-     * between [0, size - 1], otherwise throw new
-     * ArrayIndexOutOfBoundsException or IndexOutOfBoundsException.
+     * between [0, size - 1], otherwise throw new IndexOutOfBoundsException.
      */
     void add(T element, int index);
 
     /**
      * Remove element from list by index
-     * between [0, size - 1], otherwise throw new
-     * ArrayIndexOutOfBoundsException or IndexOutOfBoundsException.
+     * between [0, size - 1], otherwise throw new IndexOutOfBoundsException.
      */
     T remove(int index);
 
     /**
      * Get element from list by index
-     * between [0, size - 1], otherwise throw new
-     * ArrayIndexOutOfBoundsException or IndexOutOfBoundsException.
+     * between [0, size - 1], otherwise throw new IndexOutOfBoundsException.
      */
     T get(int index);
 
     /**
      * Set value of element by index
-     * between [0, size - 1], otherwise throw new
-     * ArrayIndexOutOfBoundsException or IndexOutOfBoundsException.
+     * between [0, size - 1], otherwise throw new IndexOutOfBoundsException.
      */
     T set(T element, int index);
 

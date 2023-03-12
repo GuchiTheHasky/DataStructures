@@ -6,15 +6,9 @@ public interface Map<K, V> extends Iterable {
     V put(K key, V value);
 
     V get(K key);
-
-    int size();
-
-    V remove(K key);
-
     boolean containsKey(K key);
-
-    void printValues();
-
+    V remove(K key);
+    int size();
     default Iterator iterator() {
         return null;
     }

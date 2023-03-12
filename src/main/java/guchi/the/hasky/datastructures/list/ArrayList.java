@@ -2,6 +2,7 @@ package guchi.the.hasky.datastructures.list;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
@@ -9,28 +10,29 @@ import java.util.StringJoiner;
  * @since 2023
  */
 
+
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
-    private static final double DEFAULT_RISE_VALUE = 1.5;
+    private static final double DEFAULT_GROW_FACTOR = 1.5;
 
     private T[] array;
     private int size;
-    private double riseValue;
+    private double growValue;
 
     public ArrayList() {
         this(DEFAULT_CAPACITY);
     }
 
     public ArrayList(int initCapacity) {
-        this(initCapacity, DEFAULT_RISE_VALUE);
+        this(initCapacity, DEFAULT_GROW_FACTOR);
     }
 
     public ArrayList(int initCapacity, double riseValue) {
         if (initCapacity < 0) {
-            System.out.println("List size, can't be less than zero.");
+            throw new IndexOutOfBoundsException(initCapacityErrorMessage(initCapacity));
         } else {
             array = (T[]) new Object[initCapacity];
-            this.riseValue = riseValue;
+            this.growValue = riseValue;
         }
     }
 
@@ -41,47 +43,36 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void add(T element, int index) {
-        if (index >= 0 && index <= size) {
-            rise();
-            System.arraycopy(array, index, array, index + 1, size - index);
-            array[index] = element;
-            size++;
-        } else {
-            throw new ArrayIndexOutOfBoundsException(indexAddError(index));
-        }
+        validateAddIndex(index);
+        grow();
+        System.arraycopy(array, index, array, index + 1, size - index);
+        array[index] = element;
+        size++;
     }
 
     @Override
     public T remove(int index) {
-        if (index >= 0 && index < size) {
-            T element = array[index];
-            System.arraycopy(array, index + 1, array, index, size - index - 1);
-            array[size - 1] = null;
-            size--;
-            return element;
-        } else {
-            throw new ArrayIndexOutOfBoundsException(indexError(index));
-        }
+        validateIndex(index);
+        T element = array[index];
+        System.arraycopy(array, index + 1, array, index, size - index - 1);
+        array[size - 1] = null;
+        size--;
+        return element;
     }
 
     @Override
     public T get(int index) {
-        if (index >= 0 && index <= size) {
-            return array[index];
-        } else {
-            throw new ArrayIndexOutOfBoundsException(indexError(index));
-        }
+        validateIndex(index);
+        assert array[index] != null;
+        return array[index];
     }
 
     @Override
     public T set(T element, int index) {
-        if (index >= 0 && index <= size) {
-            T resetElement = array[index];
-            array[index] = element;
-            return resetElement;
-        } else {
-            throw new ArrayIndexOutOfBoundsException(indexError(index));
-        }
+        validateIndex(index);
+        T resetElement = array[index];
+        array[index] = element;
+        return resetElement;
     }
 
     @Override
@@ -110,7 +101,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public int indexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if (array[i].equals(element)) {
+            if (Objects.equals(array[i], element)) {
                 return i;
             }
         }
@@ -120,7 +111,7 @@ public class ArrayList<T> implements List<T> {
     @Override
     public int lastIndexOf(T element) {
         for (int i = size - 1; i >= 0; i--) {
-            if (array[i].equals(element)) {
+            if (Objects.equals(array[i], element)) {
                 return i;
             }
         }
@@ -136,20 +127,44 @@ public class ArrayList<T> implements List<T> {
         return joiner.toString();
     }
 
-    private void rise() {
-        if (array.length == size) {
-            T[] tempArray = (T[]) new Object[(int) (size * riseValue)];
+    private void grow() {
+        if (size == 0) {
+            array = (T[]) new Object[(int) (DEFAULT_CAPACITY)];
+        } else if (size == 1) {
+            T[] tempArray = (T[]) new Object[(int) (size * 2)];
+            tempArray[0] = array[0];
+            array = tempArray;
+        } else {
+            T[] tempArray = (T[]) new Object[(int) (size * growValue)];
             System.arraycopy(array, 0, tempArray, 0, size);
             array = tempArray;
         }
     }
 
-    private String indexAddError(int index) {
-        return String.format("Error, index: %d;\nIndex less than => \"0\" or more than => \"%d\".", index, size);
+    private void validateAddIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new ArrayIndexOutOfBoundsException(indexAddErrorMessage(index));
+        }
     }
 
-    private String indexError(int index) {
-        return String.format("Error, index: %d;\nIndex less than => \"0\" or more than => \"%d\".", index, size - 1);
+    private void validateIndex(int index) {
+        if (index < 0 || index > size - 1) {
+            throw new ArrayIndexOutOfBoundsException(indexErrorMessage(index));
+        }
+    }
+
+    private String initCapacityErrorMessage(int index) {
+        return String.format("Error, index: %d, can't be less than \"0\".", index);
+    }
+
+    private String indexAddErrorMessage(int index) {
+        return String.format("Error, index: %d;\nIndex can't be less than => " +
+                "\"0\" or more than => \"%d\".", index, size);
+    }
+
+    private String indexErrorMessage(int index) {
+        return String.format("Error, index: %d;\nIndex can't be less than => " +
+                "\"0\" or more than => \"%d\".", index, size - 1);
     }
 
     @Override
@@ -168,23 +183,20 @@ public class ArrayList<T> implements List<T> {
         @Override
         public T next() {
             if (!hasNext()) {
-                throw new NoSuchElementException("The end.");
-            } else {
-                T element = array[index];
-                index++;
-                return element;
+                throw new NoSuchElementException("No more elements.");
             }
+            T element = array[index];
+            index++;
+            return element;
         }
 
         @Override
         public void remove() {
             if (index == 0) {
                 throw new IllegalStateException("Nothing to remove.");
-            } else {
-                ArrayList.this.remove(--index);
             }
+            ArrayList.this.remove(--index);
         }
-
     }
 }
 

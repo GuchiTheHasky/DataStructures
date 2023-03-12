@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class LinkedQueue<E> implements Queue<E> {
 
-    private static class Node<E>{
+    private static class Node<E> {
         E element;
         Node<E> next;
 
@@ -21,7 +21,7 @@ public class LinkedQueue<E> implements Queue<E> {
 
     @Override
     public void enqueue(E element) {
-        if (isEmpty()){
+        if (isEmpty()) {
             first = new Node<>(element);
         } else {
             first.next = new Node<>(element);
@@ -31,7 +31,7 @@ public class LinkedQueue<E> implements Queue<E> {
 
     @Override
     public E dequeue() {
-        if (size == 0){
+        if (size == 0) {
             throw new IllegalArgumentException();
         }
         E element = first.element;
@@ -39,6 +39,7 @@ public class LinkedQueue<E> implements Queue<E> {
         size--;
         return element;
     }
+
     @Override
     public E peek() {
         return first.element;
@@ -53,8 +54,8 @@ public class LinkedQueue<E> implements Queue<E> {
     public boolean contains(E element) {
         if (!Objects.isNull(element)) {
             Node<E> current = first;
-            while (current != null){
-                if (Objects.equals(current.element, element)){
+            while (current != null) {
+                if (Objects.equals(current.element, element)) {
                     return true;
                 }
                 current = current.next;
@@ -73,45 +74,47 @@ public class LinkedQueue<E> implements Queue<E> {
         first = null;
         size = 0;
     }
-        @Override
+
+    @Override
     public Iterator<E> iterator() {
-            return new QueueIterator();
-        }
-        private class QueueIterator implements Iterator<E> {
-            Node<E> current = first;
-            private boolean canRemove;
+        return new QueueIterator();
+    }
 
-            @Override
-            public boolean hasNext() {
-                return current != null;
-            }
+    private class QueueIterator implements Iterator<E> {
+        Node<E> current = first;
+        private boolean canRemove;
 
-            @Override
-            public E next() {
-                if (!hasNext()){
-                    throw new NoSuchElementException("It's an emptiness.");
-                }
-                E element = current.element;
-                canRemove = true;
-                current = current.next;
-                return element;
-            }
-
-            @Override
-            public void remove() {
-                if (!canRemove) {
-                    throw new IllegalStateException("Nothing to remove.");
-                }
-                removeNode(current);
-            }
+        @Override
+        public boolean hasNext() {
+            return current != null;
         }
 
-        private E removeNode(Node<E> node) {
-            node.element = first.element;
-            first = first.next;
-            size--;
-            return node.element;
+        @Override
+        public E next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException("It's an emptiness.");
+            }
+            E element = current.element;
+            canRemove = true;
+            current = current.next;
+            return element;
         }
+
+        @Override
+        public void remove() {
+            if (!canRemove) {
+                throw new IllegalStateException("Nothing to remove.");
+            }
+            removeNode(current);
+        }
+    }
+
+    private E removeNode(Node<E> node) {
+        node.element = first.element;
+        first = first.next;
+        size--;
+        return node.element;
+    }
 
 
 }

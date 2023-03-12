@@ -74,7 +74,7 @@ public abstract class AbstractListTest {
         list.add("doo");
 
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.add("Scooby doo", 5);
+            list.add("Scooby doo", 4);
         });
 
         assertNotNull(thrown.getMessage());
@@ -88,7 +88,7 @@ public abstract class AbstractListTest {
         list.add("dooby");
         list.add("doo");
 
-        Throwable thrown = assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+        Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
             list.add("Scooby doo", -5);
         });
 
@@ -139,7 +139,7 @@ public abstract class AbstractListTest {
         assertEquals(5, list.size());
     }
 
-    @DisplayName("Test, remove last element from list.")
+    @DisplayName("Test, remove middle element from list.")
     @Test
     public void removeMiddleElementFromListAndCheckSize() {
         list.add("Albus");
@@ -165,7 +165,7 @@ public abstract class AbstractListTest {
         list.add("Dumbledore");
 
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.remove(11);
+            list.remove(6);
         });
 
         assertNotNull(thrown.getMessage());
@@ -182,7 +182,7 @@ public abstract class AbstractListTest {
         list.add("Brian");
         list.add("Dumbledore");
 
-        Throwable thrown = assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+        Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
             list.remove(-11);
         });
 
@@ -239,7 +239,7 @@ public abstract class AbstractListTest {
         list.add("Dumbledore");
 
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.get(99);
+            list.get(5);
         });
 
         assertNotNull(thrown.getMessage());
@@ -255,7 +255,7 @@ public abstract class AbstractListTest {
         list.add("Brian");
         list.add("Dumbledore");
 
-        Throwable thrown = assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+        Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
             list.get(-100);
         });
 
@@ -334,7 +334,7 @@ public abstract class AbstractListTest {
         list.add("Brian");
         list.add("Dumbledore");
 
-        Throwable thrown = assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+        Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
             list.set("Potter", -100);
         });
 
@@ -487,19 +487,10 @@ public abstract class AbstractListTest {
         list.add("Scooby");
         list.add("dooby");
         list.add("doo");
-
         Iterator<String> iterator = list.iterator();
-
-        assertEquals("Scooby", iterator.next());
-        assertEquals("dooby", iterator.next());
-        assertEquals("doo", iterator.next());
-
+        iterator.next();
         iterator.remove();
-        iterator.remove();
-        assertFalse(list.isEmpty());
-
-        iterator.remove();
-        assertTrue(list.isEmpty());
+        assertEquals("dooby", list.get(0));
     }
 
     @DisplayName("Test, throw new IllegalStateException in Iterator method: remove().")

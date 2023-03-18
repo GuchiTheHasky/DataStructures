@@ -27,8 +27,8 @@ public abstract class AbstractListTest {
 
     abstract List<String> getList();
 
-    @DisplayName("Test, add some elements in list and check size.")
     @Test
+    @DisplayName("Test, add some elements in list and check size.")
     public void addElementsAndCheckSizeOfList() {
         list.add("Gimli");
         list.add("Legolas");
@@ -40,8 +40,8 @@ public abstract class AbstractListTest {
         assertEquals(5, list.size());
     }
 
-    @DisplayName("Test, add an element under the first index, to the array with values and check size.")
     @Test
+    @DisplayName("Test, add an element under the first index, to the array with values and check size.")
     public void addElementInFirstIndexOfListAndCheckSize() {
         list.add("W");
         list.add("O");
@@ -53,8 +53,9 @@ public abstract class AbstractListTest {
         assertEquals(4, list.size());
     }
 
-    @DisplayName("Test, add an element in the middle of list and check size.")
+
     @Test
+    @DisplayName("Test, add an element in the middle of list and check size.")
     public void addElementByIndexInTheMiddleOfListAndCheckSize() {
         list.add("Gimli");
         list.add("Legolas");
@@ -66,8 +67,8 @@ public abstract class AbstractListTest {
         assertEquals(5, list.size());
     }
 
-    @DisplayName("Test, add element in list with out of bounds index.")
     @Test
+    @DisplayName("Test, add element in list with out of bounds index.")
     public void addElementOutOfBoundsInListAndCheckSize() {
         list.add("Scooby");
         list.add("dooby");
@@ -81,23 +82,24 @@ public abstract class AbstractListTest {
         assertEquals(list.size(), 3);
     }
 
-    @DisplayName("Test, add element in list with less than zero index.")
+
     @Test
+    @DisplayName("Test, add element in list with less than zero index.")
     public void addElementWithIndexLessThanZeroAndCheckSize() {
         list.add("Scooby");
         list.add("dooby");
         list.add("doo");
 
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.add("Scooby doo", -5);
+            list.add("Scooby doo", -1);
         });
 
         assertNotNull(thrown.getMessage());
         assertEquals(list.size(), 3);
     }
 
-    @DisplayName("Test, add element in the end of list.")
     @Test
+    @DisplayName("Test, add element in the end of list.")
     public void addElementInTheEndOfListAndCheckSize() {
         list.add("Scooby");
         list.add("dooby");
@@ -107,8 +109,8 @@ public abstract class AbstractListTest {
         assertEquals(3, list.size());
     }
 
-    @DisplayName("Test, remove first element from list and check size.")
     @Test
+    @DisplayName("Test, remove first element from list and check size.")
     public void removeFirstElementFromListAndCheckSize() {
         list.add("Severus");
         list.add("Albus");
@@ -123,8 +125,8 @@ public abstract class AbstractListTest {
         assertEquals(5, list.size());
     }
 
-    @DisplayName("Test, remove last element from list and check size.")
     @Test
+    @DisplayName("Test, remove last element from list and check size.")
     public void removeLastElementFromListAndCheckSize() {
         list.add("Albus");
         list.add("Percival");
@@ -139,8 +141,8 @@ public abstract class AbstractListTest {
         assertEquals(5, list.size());
     }
 
-    @DisplayName("Test, remove middle element from list.")
     @Test
+    @DisplayName("Test, remove middle element from list.")
     public void removeMiddleElementFromListAndCheckSize() {
         list.add("Albus");
         list.add("Percival");
@@ -154,8 +156,8 @@ public abstract class AbstractListTest {
         assertEquals(5, list.size());
     }
 
-    @DisplayName("Test, remove from out of bounds index.")
     @Test
+    @DisplayName("Test, remove from out of bounds index.")
     public void removeElementFromListWithOutOfBoundsIndexAndCheckSize() {
         list.add("Albus");
         list.add("Percival");
@@ -172,8 +174,8 @@ public abstract class AbstractListTest {
         assertEquals(6, list.size());
     }
 
-    @DisplayName("Test, remove element with index less than zero.")
     @Test
+    @DisplayName("Test, remove element with index less than zero.")
     public void removeElementFromListWithIndexLessThanZeroAndCheckSize() {
         list.add("Albus");
         list.add("Percival");
@@ -183,15 +185,15 @@ public abstract class AbstractListTest {
         list.add("Dumbledore");
 
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.remove(-11);
+            list.remove(-1);
         });
 
         assertNotNull(thrown.getMessage());
         assertEquals(6, list.size());
     }
 
-    @DisplayName("Test, get first element from list.")
     @Test
+    @DisplayName("Test, get first element from list.")
     public void getFirstElementFromListAndCheckSize() {
         list.add("Albus");
         list.add("Percival");
@@ -229,8 +231,8 @@ public abstract class AbstractListTest {
         assertEquals(5, list.size());
     }
 
-    @DisplayName("Test, try to get element with out of bounds index.")
     @Test
+    @DisplayName("Test, try to get element with out of bounds index.")
     public void tryToGetElementFromListWithOutOfBoundsIndexAndCheckSize() {
         list.add("Albus");
         list.add("Percival");
@@ -246,8 +248,8 @@ public abstract class AbstractListTest {
         assertEquals(5, list.size());
     }
 
-    @DisplayName("Test, try to get element with index less than zero.")
     @Test
+    @DisplayName("Test, try to get element with index less than zero.")
     public void tryToGetElementFromListWithIndexLessThanZeroAndCheckSize() {
         list.add("Albus");
         list.add("Percival");
@@ -263,8 +265,8 @@ public abstract class AbstractListTest {
         assertEquals(5, list.size());
     }
 
-    @DisplayName("Test, set first element in list & get previous element.")
     @Test
+    @DisplayName("Test, set first element in list & get previous element.")
     public void setFirstElementInListAndCheckSize() {
         list.add("Harry");
         list.add("Percival");
@@ -278,8 +280,8 @@ public abstract class AbstractListTest {
         assertEquals(5, list.size());
     }
 
-    @DisplayName("Test, set last element in list & get previous element.")
     @Test
+    @DisplayName("Test, set last element in list & get previous element.")
     public void setLastElementInListAndCheckSize() {
         list.add("Albus");
         list.add("Percival");
@@ -318,7 +320,7 @@ public abstract class AbstractListTest {
         list.add("Dumbledore");
 
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.set("Potter", 111);
+            list.set("Potter", 5);
         });
 
         assertNotNull(thrown.getMessage());
@@ -335,15 +337,15 @@ public abstract class AbstractListTest {
         list.add("Dumbledore");
 
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.set("Potter", -100);
+            list.set("Potter", -1);
         });
 
         assertNotNull(thrown.getMessage());
         assertEquals(5, list.size());
     }
 
-    @DisplayName("Test, delete all elements, size == 0.")
     @Test
+    @DisplayName("Test, delete all elements, size == 0.")
     public void clearAllElementsInListAndCheckSize() {
         list.add("Albus");
         list.add("Percival");
@@ -356,8 +358,8 @@ public abstract class AbstractListTest {
         Assertions.assertTrue(list.isEmpty());
     }
 
-    @DisplayName("Test, size after add and remove.")
     @Test
+    @DisplayName("Test, size after add and remove.")
     public void checkSizeAfterAddAndRemoveInList() {
         list.add("Albus");
         list.add("Percival");
@@ -371,14 +373,14 @@ public abstract class AbstractListTest {
         assertEquals(3, list.size());
     }
 
-    @DisplayName("Test, is empty List true.")
     @Test
+    @DisplayName("Test, is empty List true.")
     public void isEmptyListExpectTrue() {
         Assertions.assertTrue(list.isEmpty());
     }
 
-    @DisplayName("Test, is empty List false.")
     @Test
+    @DisplayName("Test, is empty List false.")
     public void isEmptyListExpectFalse() {
         list.add("Albus");
         list.add("Percival");
@@ -388,8 +390,8 @@ public abstract class AbstractListTest {
         Assertions.assertFalse(list.isEmpty());
     }
 
-    @DisplayName("Test, is List contains element true.")
     @Test
+    @DisplayName("Test, is List contains element true.")
     public void listContainsElementExpectTrue() {
         list.add("Albus");
         list.add("Percival");
@@ -400,8 +402,8 @@ public abstract class AbstractListTest {
         assertTrue(list.contains("Percival"));
     }
 
-    @DisplayName("Test, is List contains element false.")
     @Test
+    @DisplayName("Test, is List contains element false.")
     public void listContainsElementExpectFalse() {
         list.add("Albus");
         list.add("Percival");
@@ -412,8 +414,8 @@ public abstract class AbstractListTest {
         assertFalse(list.contains("Potter"));
     }
 
-    @DisplayName("Test, get index of first element in list.")
     @Test
+    @DisplayName("Test, get index of first element in list.")
     public void checkIndexOfWorksCorrectly() {
         list.add("Albus");
         list.add("Percival");
@@ -427,8 +429,8 @@ public abstract class AbstractListTest {
         assertEquals(5, list.indexOf("Dumbledore"));
     }
 
-    @DisplayName("Test, get last index of.")
     @Test
+    @DisplayName("Test, get last index of.")
     public void checkLastIndexOfWorksCorrectly() {
         list.add("Albus");
         list.add("Percival");
@@ -442,8 +444,8 @@ public abstract class AbstractListTest {
         assertEquals(5, list.lastIndexOf("Dumbledore"));
     }
 
-    @DisplayName("Test, is toString() work correctly.")
     @Test
+    @DisplayName("Test, is toString() work correctly.")
     public void turnListToStringAndPrintIt() {
         list.add("Scooby");
         list.add("dooby");
@@ -452,15 +454,15 @@ public abstract class AbstractListTest {
         assertEquals("[Scooby, dooby, doo]", result);
     }
 
-    @DisplayName("Test: iterator has next element: false. ")
     @Test
+    @DisplayName("Test: iterator has next element: false. ")
     public void checkOfIteratorHasNextElementFalse() {
         Iterator<String> iterator = list.iterator();
         assertFalse(iterator.hasNext());
     }
 
-    @DisplayName("Test: iterator method next(), works correctly: true. ")
     @Test
+    @DisplayName("Test: iterator method next(), works correctly: true.")
     public void testIteratorMethodNextElementWorkCorrectly() {
         list.add("Scooby");
         list.add("dooby");
@@ -473,16 +475,16 @@ public abstract class AbstractListTest {
         assertEquals("doo", iterator.next());
     }
 
-    @DisplayName("Test, throw new NoSuchElementException in Iterator, method next().")
     @Test
+    @DisplayName("Test, throw new NoSuchElementException in Iterator, method next().")
     public void testThrowNoSuchElementExceptionInIteratorMethodNext() {
         Iterator<String> iterator = list.iterator();
         Throwable thrown = assertThrows(NoSuchElementException.class, iterator::next);
         assertNotNull(thrown.getMessage());
     }
 
-    @DisplayName("Test: iterator method remove(), works correctly: true. ")
     @Test
+    @DisplayName("Test: iterator method remove(), works correctly: true.")
     public void removeElementsFromListWithIterator() {
         list.add("Scooby");
         list.add("dooby");
@@ -493,8 +495,8 @@ public abstract class AbstractListTest {
         assertEquals("dooby", list.get(0));
     }
 
-    @DisplayName("Test, throw new IllegalStateException in Iterator method: remove().")
     @Test
+    @DisplayName("Test, throw new IllegalStateException in Iterator method: remove().")
     public void testThrowIllegalStateExceptionInIteratorMethodRemove() {
         Iterator<String> iterator = list.iterator();
         Throwable thrown = assertThrows(IllegalStateException.class, iterator::remove);

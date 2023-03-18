@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Method;
 import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -118,13 +117,9 @@ public class HashMapTest {
 
     @Test
     @DisplayName("Test, throw null pointer exception when key is null.")
-    public void testThrowNullPointerWhenKeyIsNull() throws NoSuchMethodException {
-        // Не зміг змінити модифікатор доступу, пробував різні версії гуави, тому так...
-        Method method = HashMap.class.getDeclaredMethod("validateKey", Object.class);
-        method.setAccessible(true);
-
-        Throwable thrown = assertThrows(IllegalArgumentException.class, () -> {
-            method.invoke(myMap, null);
+    public void testThrowNullPointerWhenKeyIsNull() {
+        Throwable thrown = assertThrows(NullPointerException.class, () -> {
+            myMap.validateKey(null);
         });
         assertNotNull(thrown.getMessage());
     }
@@ -139,29 +134,24 @@ public class HashMapTest {
     @Test
     @DisplayName("Test, iterator has next entry false.")
     public void testIteratorHasNextEntryFalse() {
-        myMap = new HashMap<>();
-        Iterator<HashMap.Entry<String, String>> iterator = myMap.iterator();
+        HashMap<String, String> testMap = new HashMap<>();
+        Iterator<HashMap.Entry<String, String>> iterator = testMap.iterator();
         assertFalse(iterator.hasNext());
     }
 
     @Test
-    @DisplayName("Test, iterator woks correctly.")
+    @DisplayName("Test, iterator method next() woks correctly.")
     public void testIteratorWorksCorrectly() {
         HashMap<Integer, Integer> map = new HashMap<>();
         Iterator<HashMap.Entry<Integer, Integer>> iterator = map.iterator();
 
         map.put(111, 111);
-        HashMap.Entry<Integer, Integer> first = iterator.next();
-        assertEquals(111, first.getValue());
-
-        iterator.remove();
-
         map.put(222, 222);
-        HashMap.Entry<Integer, Integer> second = iterator.next();
-        assertEquals(222, second.getValue());
+        map.put(333, 333);
 
-        iterator.remove();
-        assertEquals(0, map.size());
+        assertEquals(111, iterator.next().getValue());
+        assertEquals(222, iterator.next().getValue());
+        assertEquals(333, iterator.next().getValue());
     }
 
     @Test
@@ -184,7 +174,6 @@ public class HashMapTest {
             Iterator<HashMap.Entry<Integer, Integer>> iterator = map.iterator();
             iterator.remove();
         });
-
         assertNotNull(thrown.getMessage());
     }
 

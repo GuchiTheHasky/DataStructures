@@ -161,13 +161,13 @@ public class LinkedList<T> implements List<T> {
     }
 
     private String indexAddErrorMessage(int index) {
-        return String.format("Error, index: %d;\nIndex can't be less than => " +
-                "\"0\" or more than => \"%d\".", index, size);
+        return String.format("Error, index: %d;\nIndex must be between " +
+                "\"0\" and \"%d\".", index, size);
     }
 
     private String indexErrorMessage(int index) {
-        return String.format("Error, index: %d;\nIndex can't be less than => " +
-                "\"0\" or more than => \"%d\".", index, size - 1);
+        return String.format("Error, index: %d;\nIndex must be between " +
+                "\"0\" and \"%d\".", index, size - 1);
     }
 
     private Node<T> getNode(int index) {

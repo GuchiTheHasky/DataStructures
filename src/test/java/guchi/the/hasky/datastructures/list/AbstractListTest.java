@@ -258,7 +258,7 @@ public abstract class AbstractListTest {
         list.add("Dumbledore");
 
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.get(-100);
+            list.get(-1);
         });
 
         assertNotNull(thrown.getMessage());
@@ -499,7 +499,7 @@ public abstract class AbstractListTest {
     @DisplayName("Test, throw new IllegalStateException in Iterator method: remove().")
     public void testThrowIllegalStateExceptionInIteratorMethodRemove() {
         Iterator<String> iterator = list.iterator();
-        Throwable thrown = assertThrows(IllegalStateException.class, iterator::remove);
+        Throwable thrown = assertThrows(UnsupportedOperationException.class, iterator::remove);
         assertNotNull(thrown.getMessage());
     }
 }

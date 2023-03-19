@@ -27,12 +27,12 @@ public class ArrayList<T> implements List<T> {
         this(initCapacity, DEFAULT_GROW_FACTOR);
     }
 
-    public ArrayList(int initCapacity, double riseValue) {
+    public ArrayList(int initCapacity, double growFactor) {
         if (initCapacity < 0) {
             throw new IndexOutOfBoundsException(initCapacityErrorMessage(initCapacity));
         } else {
             array = (T[]) new Object[initCapacity];
-            this.growValue = riseValue;
+            this.growValue = growFactor;
         }
     }
 
@@ -143,13 +143,13 @@ public class ArrayList<T> implements List<T> {
 
     private void validateAddIndex(int index) {
         if (index < 0 || index > size) {
-            throw new ArrayIndexOutOfBoundsException(indexAddErrorMessage(index));
+            throw new IndexOutOfBoundsException(indexAddErrorMessage(index));
         }
     }
 
     private void validateIndex(int index) {
         if (index < 0 || index > size - 1) {
-            throw new ArrayIndexOutOfBoundsException(indexErrorMessage(index));
+            throw new IndexOutOfBoundsException(indexErrorMessage(index));
         }
     }
 
@@ -158,13 +158,13 @@ public class ArrayList<T> implements List<T> {
     }
 
     private String indexAddErrorMessage(int index) {
-        return String.format("Error, index: %d;\nIndex can't be less than => " +
-                "\"0\" or more than => \"%d\".", index, size);
+        return String.format("Error, index: %d;\nIndex must be between " +
+                "\"0\" and \"%d\".", index, size);
     }
 
     private String indexErrorMessage(int index) {
-        return String.format("Error, index: %d;\nIndex can't be less than => " +
-                "\"0\" or more than => \"%d\".", index, size - 1);
+        return String.format("Error, index: %d;\nIndex must be between " +
+                "\"0\" and \"%d\".", index, size - 1);
     }
 
     @Override
@@ -193,7 +193,7 @@ public class ArrayList<T> implements List<T> {
         @Override
         public void remove() {
             if (index == 0) {
-                throw new IllegalStateException("Nothing to remove.");
+                throw new UnsupportedOperationException("Nothing to remove.");
             }
             ArrayList.this.remove(--index);
         }

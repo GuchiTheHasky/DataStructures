@@ -207,7 +207,7 @@ public class LinkedList<T> implements List<T> {
         @Override
         public void remove() {
             if (!hasNext()) {
-                throw new IllegalStateException("Invoke next() method first.");
+                throw new UnsupportedOperationException("Invoke next() method first.");
             }
             removeNode(current.previous);
         }

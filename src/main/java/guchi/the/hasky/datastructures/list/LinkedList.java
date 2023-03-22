@@ -24,7 +24,22 @@ public class LinkedList<T> implements List<T> {
     public void add(T element, int index) {
         validateAddIndex(index);
         Node<T> node = new Node<>(element);
-        add(index, node);
+        if (size == 0) {
+            first = last = node;
+        } else if (index == 0) {
+            node.next = first;
+            first.previous = node;
+            first = node;
+        } else if (index == size) {
+            node.previous = last;
+            last.next = node;
+            last = node;
+        } else {
+            Node<T> current = getNode(index);
+            node.next = current;
+            node.previous = current.previous;
+            current.previous.next = node;
+        }
         size++;
     }
 
@@ -112,22 +127,7 @@ public class LinkedList<T> implements List<T> {
     }
 
     private void add(int index, Node<T> node) {
-        if (size == 0) {
-            first = last = node;
-        } else if (index == 0) {
-            node.next = first;
-            first.previous = node;
-            first = node;
-        } else if (index == size) {
-            node.previous = last;
-            last.next = node;
-            last = node;
-        } else {
-            Node<T> current = getNode(index);
-            node.next = current;
-            node.previous = current.previous;
-            current.previous.next = node;
-        }
+
     }
 
     private T removeNode(Node<T> node) {
@@ -139,10 +139,10 @@ public class LinkedList<T> implements List<T> {
             first.previous = null;
         } else if (node == last) {
             last = node.previous;
-            last.previous = null;
+            last.next = null;
         } else {
             node.previous.next = node.next;
-            node.next = node.previous;
+            node.next.previous = node.previous;
         }
         size--;
         return node.element;
@@ -188,6 +188,7 @@ public class LinkedList<T> implements List<T> {
 
     private class ListIterator implements Iterator<T> {
         private Node<T> current = first;
+        boolean canRemove;
 
         @Override
         public boolean hasNext() {
@@ -201,15 +202,21 @@ public class LinkedList<T> implements List<T> {
             }
             T element = current.element;
             current = current.next;
+            canRemove = true;
             return element;
         }
 
         @Override
         public void remove() {
-            if (!hasNext()) {
-                throw new UnsupportedOperationException("Invoke next() method first.");
+            if (!canRemove) {
+                throw new IllegalStateException("Invoke next() method first.");
+            } else if (current == null) {
+                first = last = null;
+                size--;
+            } else {
+                removeNode(current.previous);
             }
-            removeNode(current.previous);
+            canRemove = false;
         }
     }
 

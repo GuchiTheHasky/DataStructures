@@ -5,9 +5,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 
 public class HashMapTest {
     HashMap<String, String> myMap;
@@ -21,49 +21,72 @@ public class HashMapTest {
     }
 
     @Test
-    @DisplayName("Test, test put new entries & check size.")
-    public void testPutNewEntriesAndCheckSize() {
-        assertEquals(3, myMap.size());
+    @DisplayName("Test, initial capacity throw exception.")
+    public void testInitialCapacityThrowException() {
+        Throwable thrown = assertThrows(IllegalArgumentException.class, () -> {
+            HashMap<Integer, Integer> inMap = new HashMap<>(-1);
+        });
+        assertNotNull(thrown.getMessage());
     }
 
     @Test
-    @DisplayName("Test, put entry if map already contains key & check size.")
-    public void testPutEntryIfMapAlreadyContainsKeyAndCheckSize() {
-        myMap.put("Dina", "Staf");
+    @DisplayName("Test, default Grow Factor throw Exception.")
+    public void testDefaultGrowFactorThrowException() {
+        Throwable thrown = assertThrows(IllegalArgumentException.class, () -> {
+            HashMap<Integer, Integer> inMap = new HashMap<>(0, -1);
+        });
+        assertNotNull(thrown.getMessage());
+    }
 
-        assertEquals(3, myMap.size());
+    @Test
+    @DisplayName("Test, default Load Factor throw Exception.")
+    public void testDefaultLoadFactorThrowException() {
+        Throwable thrown = assertThrows(IllegalArgumentException.class, () -> {
+            HashMap<Integer, Integer> inMap = new HashMap<>(0, 2, 0);
+        });
+        assertNotNull(thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test, put entry return null if already contains key & check size.")
+    public void testPutEntryIfMapAlreadyContainsKeyAndCheckSize() {
+        assertNull(myMap.put("Noris", "Staf"));
+        assertEquals(4, myMap.size());
     }
 
     @Test
     @DisplayName("Test, put entry if map already contains key return previous value.")
-    public void testPutEntryIfMapAlreadyContainsKeyPreviousValue() {
-        String previousValue = myMap.put("Dina", "Shepherd");
+    public void testPutEntryIfMapAlreadyContainsKeyGetPreviousValue() {
+        String previousFirstValue = myMap.put("Guchi", "Shepherd");
+        String previousSecondValue = myMap.put("Archi", "Shepherd");
+        String previousThirdValue = myMap.put("Dina", "Shepherd");
 
-        assertEquals("Staf", previousValue);
+        assertEquals("Hasky", previousFirstValue);
+        assertEquals("Labrador", previousSecondValue);
+        assertEquals("Staf", previousThirdValue);
     }
 
     @Test
-    @DisplayName("Test, get first value from map.")
+    @DisplayName("Test, get different values from map.")
     public void testGetFirstValueFromMap() {
-        String expected = "Hasky";
-        String actual = myMap.get("Guchi");
-        assertEquals(expected, actual);
+        String expectedFirst = "Hasky";
+        String actualFirst = myMap.get("Guchi");
+        assertEquals(expectedFirst, actualFirst);
+
+        String expectedSecond = "Labrador";
+        String actualSecond = myMap.get("Archi");
+        assertEquals(expectedSecond, actualSecond);
+
+        String expectedThird = "Staf";
+        String actualThird = myMap.get("Dina");
+        assertEquals(expectedThird, actualThird);
     }
 
     @Test
-    @DisplayName("Test, get middle value from map.")
-    public void testGetMiddleValueFromMap() {
-        String expected = "Labrador";
-        String actual = myMap.get("Archi");
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @DisplayName("Test, get last value from map.")
-    public void testGetLastValueFromMap() {
-        String expected = "Staf";
-        String actual = myMap.get("Dina");
-        assertEquals(expected, actual);
+    @DisplayName("Test, get null if map hasn't key.")
+    public void testTryGetValueWithIncorrectKey() {
+        String actual = myMap.get("Adam");
+        assertNull(actual);
     }
 
     @Test
@@ -129,10 +152,16 @@ public class HashMapTest {
     public void testIteratorHasNextEntryTrue() {
         Iterator<HashMap.Entry<String, String>> iterator = myMap.iterator();
         assertTrue(iterator.hasNext());
+        iterator.next();
+        assertTrue(iterator.hasNext());
+        iterator.next();
+        assertTrue(iterator.hasNext());
+        iterator.next();
+        assertFalse(iterator.hasNext());
     }
 
     @Test
-    @DisplayName("Test, iterator has next entry false.")
+    @DisplayName("Test, iterator has next entry return false if map is empty.")
     public void testIteratorHasNextEntryFalse() {
         HashMap<String, String> testMap = new HashMap<>();
         Iterator<HashMap.Entry<String, String>> iterator = testMap.iterator();
@@ -140,26 +169,11 @@ public class HashMapTest {
     }
 
     @Test
-    @DisplayName("Test, iterator method next() woks correctly.")
-    public void testIteratorWorksCorrectly() {
-        HashMap<Integer, Integer> map = new HashMap<>();
-        Iterator<HashMap.Entry<Integer, Integer>> iterator = map.iterator();
-
-        map.put(111, 111);
-        map.put(222, 222);
-        map.put(333, 333);
-
-        assertEquals(111, iterator.next().getValue());
-        assertEquals(222, iterator.next().getValue());
-        assertEquals(333, iterator.next().getValue());
-    }
-
-    @Test
-    @DisplayName("Test, iterator next throw NullPointerException if map is empty.")
-    public void testIteratorNextThrowNullPointerExceptionIfMapIsEmpty() {
-        HashMap<Integer, Integer> map = new HashMap<>();
-        Throwable thrown = assertThrows(NullPointerException.class, () -> {
-            Iterator<HashMap.Entry<Integer, Integer>> iterator = map.iterator();
+    @DisplayName("Test, iterator next() throw exception if map is empty.")
+    public void testIteratorNextThrowExceptionInEmptyMap() {
+        Throwable thrown = assertThrows(NoSuchElementException.class, () -> {
+            HashMap<String, String> testMap = new HashMap<>();
+            Iterator<HashMap.Entry<String, String>> iterator = testMap.iterator();
             iterator.next();
         });
 
@@ -167,15 +181,68 @@ public class HashMapTest {
     }
 
     @Test
-    @DisplayName("Test, iterator remove from empty map throw NullPointerException.")
-    public void testIteratorRemoveFromEmptyMapThrowNullPointerException() {
+    @DisplayName("Test, iterator next() throw exception in map with values.")
+    public void testIteratorNextThrowExceptionInMapWithValues() {
+        Throwable thrown = assertThrows(NoSuchElementException.class, () -> {
+            Iterator<HashMap.Entry<String, String>> iterator = myMap.iterator();
+            iterator.next();
+            iterator.next();
+            iterator.next();
+            iterator.next();
+        });
+
+        assertNotNull(thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test, iterator method next() return values.")
+    public void testIteratorWorksCorrectly() {
+        Iterator<HashMap.Entry<String, String>> iterator = myMap.iterator();
+        assertEquals("Staf", iterator.next().getValue());
+        assertEquals("Hasky", iterator.next().getValue());
+        assertEquals("Labrador", iterator.next().getValue());
+    }
+
+    @Test
+    @DisplayName("Test, iterator remove from empty map throw IllegalStateException.")
+    public void testIteratorRemoveFromEmptyMapThrowIllegalStateException() {
         HashMap<Integer, Integer> map = new HashMap<>();
-        Throwable thrown = assertThrows(NullPointerException.class, () -> {
+        Throwable thrown = assertThrows(IllegalStateException.class, () -> {
             Iterator<HashMap.Entry<Integer, Integer>> iterator = map.iterator();
             iterator.remove();
         });
         assertNotNull(thrown.getMessage());
     }
 
+    @Test
+    @DisplayName("Test, iterator remove & check size.")
+    public void testIteratorRemoveAndCheckSize() {
+        Iterator<HashMap.Entry<String, String>> iterator = myMap.iterator();
+        assertEquals(3, myMap.size());
+        iterator.next();
+        iterator.remove();
+        assertEquals(2, myMap.size());
+        iterator.next();
+        iterator.remove();
+        assertEquals(1, myMap.size());
+        iterator.next();
+        iterator.remove();
+        assertEquals(0, myMap.size());
+    }
+
+    @Test
+    @DisplayName("Test, toString works correctly.")
+    public void testToStringWorksCorrectly() {
+        String actualFirst = myMap.toString("Guchi");
+        String actualSecond = myMap.toString("Archi");
+        String actualThird = myMap.toString("Dina");
+        String expectedFirst = "Hasky";
+        String expectedSecond = "Labrador";
+        String expectedThird = "Staf";
+
+        assertEquals(expectedFirst, actualFirst);
+        assertEquals(expectedSecond, actualSecond);
+        assertEquals(expectedThird, actualThird);
+    }
 
 }

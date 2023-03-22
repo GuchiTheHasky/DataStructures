@@ -1,5 +1,7 @@
 package guchi.the.hasky.datastructures.list;
 
+import guchi.the.hasky.datastructures.annotation.ForTestsOnly;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -17,7 +19,7 @@ public class ArrayList<T> implements List<T> {
 
     private T[] array;
     private int size;
-    private double growValue;
+    private final double growFactor;
 
     public ArrayList() {
         this(DEFAULT_CAPACITY);
@@ -27,13 +29,13 @@ public class ArrayList<T> implements List<T> {
         this(initCapacity, DEFAULT_GROW_FACTOR);
     }
 
+    @SuppressWarnings("uncheked")
     public ArrayList(int initCapacity, double growFactor) {
         if (initCapacity < 0) {
             throw new IndexOutOfBoundsException(initCapacityErrorMessage(initCapacity));
-        } else {
-            array = (T[]) new Object[initCapacity];
-            this.growValue = growFactor;
         }
+        this.array = (T[]) new Object[initCapacity];
+        this.growFactor = growFactor;
     }
 
     @Override
@@ -127,15 +129,21 @@ public class ArrayList<T> implements List<T> {
         return joiner.toString();
     }
 
+    @Override
+    public Iterator<T> iterator() {
+        return new MyIterator();
+    }
+
+    @ForTestsOnly
+    T[] getArray() {
+        return array;
+    }
+
     private void grow() {
-        if (size == 0) {
-            array = (T[]) new Object[(int) (DEFAULT_CAPACITY)];
-        } else if (size == 1) {
-            T[] tempArray = (T[]) new Object[(int) (size * 2)];
-            tempArray[0] = array[0];
-            array = tempArray;
-        } else {
-            T[] tempArray = (T[]) new Object[(int) (size * growValue)];
+        if (array.length == 0 || array.length == 1) {
+            array = (T[]) new Object[DEFAULT_CAPACITY / 2];
+        } else if (size == array.length) {
+            T[] tempArray = (T[]) new Object[(int) Math.ceil(size * growFactor) + 1];
             System.arraycopy(array, 0, tempArray, 0, size);
             array = tempArray;
         }
@@ -153,8 +161,8 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private String initCapacityErrorMessage(int index) {
-        return String.format("Error, index: %d, can't be less than \"0\".", index);
+    private String initCapacityErrorMessage(int capacity) {
+        return String.format("Error, initial capacity: %d, \ncan't be less than \"0\".", capacity);
     }
 
     private String indexAddErrorMessage(int index) {
@@ -165,11 +173,6 @@ public class ArrayList<T> implements List<T> {
     private String indexErrorMessage(int index) {
         return String.format("Error, index: %d;\nIndex must be between " +
                 "\"0\" and \"%d\".", index, size - 1);
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return new MyIterator();
     }
 
     private class MyIterator implements Iterator<T> {
@@ -193,7 +196,7 @@ public class ArrayList<T> implements List<T> {
         @Override
         public void remove() {
             if (index == 0) {
-                throw new UnsupportedOperationException("Nothing to remove.");
+                throw new IllegalStateException("Nothing to remove.");
             }
             ArrayList.this.remove(--index);
         }

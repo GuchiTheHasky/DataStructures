@@ -489,17 +489,44 @@ public abstract class AbstractListTest {
         list.add("Scooby");
         list.add("dooby");
         list.add("doo");
+
         Iterator<String> iterator = list.iterator();
+
         iterator.next();
         iterator.remove();
         assertEquals("dooby", list.get(0));
+        System.out.println(list.toString());
+
+        iterator.next();
+        iterator.remove();
+        assertEquals("doo", list.get(0));
+        System.out.println(list.toString());
+
+        iterator.next();
+        iterator.remove();
+        assertTrue(list.isEmpty());
     }
 
     @Test
     @DisplayName("Test, throw new IllegalStateException in Iterator method: remove().")
     public void testThrowIllegalStateExceptionInIteratorMethodRemove() {
         Iterator<String> iterator = list.iterator();
-        Throwable thrown = assertThrows(UnsupportedOperationException.class, iterator::remove);
+        Throwable thrown = assertThrows(IllegalStateException.class, iterator::remove);
         assertNotNull(thrown.getMessage());
+    }
+
+    @Test
+    public void testListIteratorWorksCorrectly() {
+        list.add("Scooby");
+        list.add("dooby");
+        list.add("doo");
+
+        Iterator<String> iterator = list.iterator();
+        assertTrue(iterator.hasNext());
+        assertEquals("Scooby", iterator.next());
+        assertTrue(iterator.hasNext());
+        assertEquals("dooby", iterator.next());
+        assertTrue(iterator.hasNext());
+        assertEquals("doo", iterator.next());
     }
 }

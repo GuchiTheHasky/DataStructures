@@ -196,7 +196,7 @@ public class HashMap<K, V> implements Map<K, V> {
         if (hashCode == Integer.MIN_VALUE) {
             hashCode = hashCode * (-1) - 1;
         }
-        return Math.abs(hashCode) % buckets.length; // ???
+        return Math.abs(hashCode) % buckets.length;
     }
 
     @ForTestsOnly

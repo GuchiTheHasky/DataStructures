@@ -12,7 +12,7 @@ public interface Map<K, V> extends Iterable<HashMap.Entry<K, V>> {
     V put(K key, V value);
 
     /**
-     * Get value bu key, if key doesn't exist,
+     * Get value by key, if key doesn't exist,
      * return null.
      */
     V get(K key);

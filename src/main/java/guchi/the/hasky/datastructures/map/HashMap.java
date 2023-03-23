@@ -1,13 +1,11 @@
 package guchi.the.hasky.datastructures.map;
 
-import guchi.the.hasky.datastructures.annotation.ForTestsOnly;
-
 import java.util.*;
 
 public class HashMap<K, V> implements Map<K, V> {
-    public static final int DEFAULT_CAPACITY = 5;
+    public static final int DEFAULT_CAPACITY = 10;
     public static final double DEFAULT_LOAD_FACTOR = 0.75;
-    public static final int DEFAULT_GROW_FACTOR = 2;
+    public static final int DEFAULT_GROW_FACTOR = 5;
     private final int growFactor;
     private final double loadFactor;
     private List<Entry<K, V>>[] buckets;
@@ -42,7 +40,6 @@ public class HashMap<K, V> implements Map<K, V> {
 
     @Override
     public V put(K key, V value) {
-        validateKey(key);
         growIfNeeded();
         if (!containsKey(key)) {
             Entry<K, V> entry = new Entry<>(key, value);
@@ -115,41 +112,51 @@ public class HashMap<K, V> implements Map<K, V> {
     }
 
     private class MyIterator implements Iterator<Entry<K, V>> {
-        private int bucketIndex = 0;
-        private boolean canRemove;
-        private Iterator<Entry<K, V>> bucketIterator = buckets[bucketIndex].iterator();
+        private final List<Entry<K, V>> list = convertMapContentInList();
+        int entryPosition = 0;
+        private boolean canRemove = false;
 
         @Override
         public boolean hasNext() {
-            if (size == 0) {
+            if (entryPosition == list.size()) {
                 return false;
             }
-            if (bucketIterator.hasNext()) {
-                return true;
-            } else {
-                bucketIndex++;
-                bucketIterator = buckets[bucketIndex].iterator();
-                return bucketIterator.hasNext();
-            }
+            return size != 0;
         }
 
         @Override
         public Entry<K, V> next() {
-            if (!hasNext()) {
+            if (entryPosition == list.size()) {
                 throw new NoSuchElementException("Map is empty.");
             }
+            entryPosition++;
             canRemove = true;
-            return bucketIterator.next();
+            return list.get(entryPosition - 1);
         }
 
         @Override
         public void remove() {
             if (!canRemove) {
-                throw new IllegalStateException("Call next(), first.");
+                throw new NoSuchElementException("Call next(), first.");
             }
             canRemove = false;
-            bucketIterator.remove();
+            list.remove(entryPosition - 1);
+            entryPosition--;
             size--;
+        }
+
+        private List<Entry<K, V>> convertMapContentInList() {
+            List<Entry<K, V>> mapCounterGeneric = new ArrayList<>();
+            for (List<Entry<K, V>> bucket : buckets) {
+                if (bucket.size() > 0) {
+                    for (Entry<K, V> kvEntry : bucket) {
+                        if (kvEntry != null) {
+                            mapCounterGeneric.add(kvEntry);
+                        }
+                    }
+                }
+            }
+            return mapCounterGeneric;
         }
     }
 
@@ -168,46 +175,37 @@ public class HashMap<K, V> implements Map<K, V> {
     }
 
     private List<Entry<K, V>> getBucket(K key) {
-        validateKey(key);
         return buckets[getIndex(key)];
     }
 
     private List<Entry<K, V>> getBucket(int index) {
-        if (index < 0 || index > buckets.length - 1) {
-            throw new IndexOutOfBoundsException("Error, wrong index");
-        }
         return buckets[index];
     }
 
     private Entry<K, V> getEntry(K key) {
-        validateKey(key);
-        List<Entry<K, V>> currentList = getBucket(key);
-        for (Entry<K, V> entry : currentList) {
-            if (Objects.equals(entry.key, key)) {
-                return entry;
+        if (size > 0) {
+            List<Entry<K, V>> currentList = getBucket(key);
+            for (Entry<K, V> entry : currentList) {
+                if (Objects.equals(entry.key, key)) {
+                    return entry;
+                }
             }
         }
         return null;
     }
 
     private int getIndex(K key) {
-        validateKey(key);
-        int hashCode = key.hashCode();
+        int hashCode = 0;
+        if (key != null) {
+            hashCode = key.hashCode();
+        }
         if (hashCode == Integer.MIN_VALUE) {
             hashCode = hashCode * (-1) - 1;
         }
         return Math.abs(hashCode) % buckets.length;
     }
 
-    @ForTestsOnly
-    void validateKey(K key) {
-        if (key == null) {
-            throw new NullPointerException("The key, can't be null.");
-        }
-    }
-
     private V getValue(K key) {
-        validateKey(key);
         if (containsKey(key)) {
             List<Entry<K, V>> currentList = getBucket(key);
             for (Entry<K, V> entry : currentList) {
@@ -221,7 +219,8 @@ public class HashMap<K, V> implements Map<K, V> {
     }
 
     private String errorCapacityMessage(int initCapacity) {
-        return String.format("Error, wrong initial capacity: %d.\nYou can't input value less than \"0\".", initCapacity);
+        return String.format("Error, wrong initial capacity: %d." +
+                "\nYou can't input value less than \"0\".", initCapacity);
     }
 
     private String errorFactorMessage(int growFactor, double loadFactor) {
@@ -242,6 +241,10 @@ public class HashMap<K, V> implements Map<K, V> {
 
         public V getValue() {
             return value;
+        }
+
+        public K getKey() {
+            return key;
         }
     }
 }

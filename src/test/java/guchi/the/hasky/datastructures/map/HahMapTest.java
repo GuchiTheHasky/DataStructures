@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HashMapTest {
+public class HahMapTest {
     HashMap<String, String> myMap;
 
     @BeforeEach
@@ -139,15 +139,6 @@ public class HashMapTest {
     }
 
     @Test
-    @DisplayName("Test, throw null pointer exception when key is null.")
-    public void testThrowNullPointerWhenKeyIsNull() {
-        Throwable thrown = assertThrows(NullPointerException.class, () -> {
-            myMap.validateKey(null);
-        });
-        assertNotNull(thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("Test, iterator has next entry true.")
     public void testIteratorHasNextEntryTrue() {
         Iterator<HashMap.Entry<String, String>> iterator = myMap.iterator();
@@ -198,16 +189,22 @@ public class HashMapTest {
     @DisplayName("Test, iterator method next() return values.")
     public void testIteratorWorksCorrectly() {
         Iterator<HashMap.Entry<String, String>> iterator = myMap.iterator();
-        assertEquals("Staf", iterator.next().getValue());
-        assertEquals("Hasky", iterator.next().getValue());
-        assertEquals("Labrador", iterator.next().getValue());
+        String val1 = iterator.next().getValue();
+        String val2 = iterator.next().getValue();
+        String val3 = iterator.next().getValue();
+
+        assertEquals("Staf", val1);
+
+        assertEquals("Hasky", val2);
+
+        assertEquals("Labrador", val3);
     }
 
     @Test
     @DisplayName("Test, iterator remove from empty map throw IllegalStateException.")
     public void testIteratorRemoveFromEmptyMapThrowIllegalStateException() {
         HashMap<Integer, Integer> map = new HashMap<>();
-        Throwable thrown = assertThrows(IllegalStateException.class, () -> {
+        Throwable thrown = assertThrows(NoSuchElementException.class, () -> {
             Iterator<HashMap.Entry<Integer, Integer>> iterator = map.iterator();
             iterator.remove();
         });

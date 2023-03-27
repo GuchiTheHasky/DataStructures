@@ -428,7 +428,7 @@ public class MapTests {
         myMap.put(keyZ, keyZValue);
 
         Iterator<HashMap.Entry<String, String>> iterator = myMap.iterator();
-
+//        !!! Оригінальна послідовність:
 //        HashMap.Entry<String, String> resultQ = iterator.next();
 //        HashMap.Entry<String, String> resultW = iterator.next();
 //        HashMap.Entry<String, String> resultE = iterator.next();

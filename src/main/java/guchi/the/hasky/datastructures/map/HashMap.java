@@ -146,17 +146,17 @@ public class HashMap<K, V> implements Map<K, V> {
         }
 
         private List<Entry<K, V>> convertMapContentInList() {
-            List<Entry<K, V>> mapCounterGeneric = new ArrayList<>();
+            List<Entry<K, V>> mapInList = new ArrayList<>();
             for (List<Entry<K, V>> bucket : buckets) {
                 if (bucket.size() > 0) {
                     for (Entry<K, V> kvEntry : bucket) {
                         if (kvEntry != null) {
-                            mapCounterGeneric.add(kvEntry);
+                            mapInList.add(kvEntry);
                         }
                     }
                 }
             }
-            return mapCounterGeneric;
+            return mapInList;
         }
     }
 

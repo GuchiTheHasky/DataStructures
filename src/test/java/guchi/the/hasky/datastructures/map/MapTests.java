@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static guchi.the.hasky.datastructures.map.HashMap.Entry;
 
 public class MapTests {
 
@@ -377,7 +378,7 @@ public class MapTests {
     public void givenEmptyMapWhenIteratorNextThenNoSuchElementExceptionShouldBeRaised() {
         Throwable thrown = assertThrows(NoSuchElementException.class, () -> {
             HashMap<String, String> testMap = new HashMap<>();
-            Iterator<HashMap.Entry<String, String>> iterator = testMap.iterator();
+            Iterator<Entry<String, String>> iterator = testMap.iterator();
             iterator.next();
         });
         assertNotNull(thrown.getMessage());
@@ -390,9 +391,9 @@ public class MapTests {
         String value = "value";
         map.put(key, value);
 
-        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
+        Iterator<Entry<String, String>> iterator = map.iterator();
 
-        HashMap.Entry<String, String> entry = iterator.next();
+        Entry<String, String> entry = iterator.next();
         assertEquals(key, entry.getKey());
         assertEquals(value, entry.getValue());
 
@@ -427,22 +428,22 @@ public class MapTests {
         myMap.put(keyY, keyYValue);
         myMap.put(keyZ, keyZValue);
 
-        Iterator<HashMap.Entry<String, String>> iterator = myMap.iterator();
+        Iterator<Entry<String, String>> iterator = myMap.iterator();
 //        !!! Оригінальна послідовність:
-//        HashMap.Entry<String, String> resultQ = iterator.next();
-//        HashMap.Entry<String, String> resultW = iterator.next();
-//        HashMap.Entry<String, String> resultE = iterator.next();
-//        HashMap.Entry<String, String> resultR = iterator.next();
-//        HashMap.Entry<String, String> resultT = iterator.next();
-//        HashMap.Entry<String, String> resultY = iterator.next();
-//        HashMap.Entry<String, String> resultZ = iterator.next();
-        HashMap.Entry<String, String> resultR = iterator.next();
-        HashMap.Entry<String, String> resultZ = iterator.next();
-        HashMap.Entry<String, String> resultT = iterator.next();
-        HashMap.Entry<String, String> resultQ = iterator.next();
-        HashMap.Entry<String, String> resultW = iterator.next();
-        HashMap.Entry<String, String> resultE = iterator.next();
-        HashMap.Entry<String, String> resultY = iterator.next();
+//        Entry<String, String> resultQ = iterator.next();
+//        Entry<String, String> resultW = iterator.next();
+//        Entry<String, String> resultE = iterator.next();
+//        Entry<String, String> resultR = iterator.next();
+//        Entry<String, String> resultT = iterator.next();
+//        Entry<String, String> resultY = iterator.next();
+//        Entry<String, String> resultZ = iterator.next();
+        Entry<String, String> resultR = iterator.next();
+        Entry<String, String> resultZ = iterator.next();
+        Entry<String, String> resultT = iterator.next();
+        Entry<String, String> resultQ = iterator.next();
+        Entry<String, String> resultW = iterator.next();
+        Entry<String, String> resultE = iterator.next();
+        Entry<String, String> resultY = iterator.next();
 
 
         assertEquals(keyZ, resultZ.getKey());
@@ -493,7 +494,7 @@ public class MapTests {
         HashMap<String, String> map = new HashMap<>();
         map.put("key", "value");
         map.put("key2", "value");
-        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
+        Iterator<Entry<String, String>> iterator = map.iterator();
         assertTrue(iterator.hasNext());
         iterator.next();
         assertTrue(iterator.hasNext());
@@ -503,7 +504,7 @@ public class MapTests {
     public void givenMapWithOneElementWhenIteratorNextThenIteratorHasNextShouldReturnFalse() {
         HashMap<String, String> map = new HashMap<>();
         map.put("key", "value");
-        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
+        Iterator<Entry<String, String>> iterator = map.iterator();
         assertTrue(iterator.hasNext());
         iterator.next();
         assertFalse(iterator.hasNext());
@@ -512,7 +513,7 @@ public class MapTests {
     @Test
     public void givenEmptyMapWhenIteratorRemoveThenNoSuchElementExceptionShouldBeRaised() {
         HashMap<String, String> map = new HashMap<>();
-        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
+        Iterator<Entry<String, String>> iterator = map.iterator();
         Throwable thrown = assertThrows(NoSuchElementException.class, iterator::next);
         assertNotNull(thrown.getMessage());
     }
@@ -522,8 +523,8 @@ public class MapTests {
         HashMap<String, String> map = new HashMap<>();
         map.put("key", "value");
         assertEquals(1, map.size());
-        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
-        Throwable thrown = assertThrows(NoSuchElementException.class, iterator::remove);
+        Iterator<Entry<String, String>> iterator = map.iterator();
+        Throwable thrown = assertThrows(IllegalStateException.class, iterator::remove);
         assertNotNull(thrown.getMessage());
     }
 
@@ -533,7 +534,7 @@ public class MapTests {
         String key = "key";
         map.put(key, "value");
         assertEquals(1, map.size());
-        Iterator<HashMap.Entry<String, String>> iterator = map.iterator();
+        Iterator<Entry<String, String>> iterator = map.iterator();
         iterator.next();
         iterator.remove();
 

@@ -1,9 +1,9 @@
 package guchi.the.hasky.datastructures.map;
 
-import java.util.Iterator;
+import static guchi.the.hasky.datastructures.map.HashMap.Entry;
 
 
-public interface Map<K, V> extends Iterable<HashMap.Entry<K, V>> {
+public interface Map<K, V> extends Iterable<Entry<K, V>> {
     /**
      * Add new Entry <K key, V value>,
      * if key already exist, reset value.
@@ -43,9 +43,4 @@ public interface Map<K, V> extends Iterable<HashMap.Entry<K, V>> {
      * Return String of value by key.
      */
     String toString(K key);
-
-    default Iterator<HashMap.Entry<K, V>> iterator() {
-        throw new UnsupportedOperationException();
-    }
-
 }

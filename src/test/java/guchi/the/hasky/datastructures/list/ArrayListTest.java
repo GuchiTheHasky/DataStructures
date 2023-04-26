@@ -66,9 +66,12 @@ public class ArrayListTest extends AbstractListTest {
 
     @Test
     public void testInnerArrayGrowInitCapacityLessThanZero() {
+        int initialCapacity = -1;
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            ArrayList<Integer> numbersList = new ArrayList<>(-1);
+            ArrayList<Integer> numbersList = new ArrayList<>(initialCapacity);
         });
         assertNotNull(thrown.getMessage());
+        String message = "Initial capacity: " + initialCapacity + ", \ncan't be less than \"0\".";
+        assertEquals(message, thrown.getMessage());
     }
 }

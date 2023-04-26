@@ -73,13 +73,17 @@ public abstract class AbstractListTest {
         list.add("Scooby");
         list.add("dooby");
         list.add("doo");
-
+        int index = 4;
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.add("Scooby doo", 4);
+            list.add("Scooby doo", index);
         });
 
         assertNotNull(thrown.getMessage());
         assertEquals(list.size(), 3);
+
+        String message = "Index: " + index + ";\nIndex must be between " +
+                "\"0\" and \"" + list.size() + "\".";
+        assertEquals(message, thrown.getMessage());
     }
 
 
@@ -89,13 +93,17 @@ public abstract class AbstractListTest {
         list.add("Scooby");
         list.add("dooby");
         list.add("doo");
-
+        int index = -1;
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
             list.add("Scooby doo", -1);
         });
 
         assertNotNull(thrown.getMessage());
         assertEquals(list.size(), 3);
+
+        String message = "Index: " + index + ";\nIndex must be between " +
+                "\"0\" and \"" + list.size() + "\".";
+        assertEquals(message, thrown.getMessage());
     }
 
     @Test
@@ -165,13 +173,18 @@ public abstract class AbstractListTest {
         list.add("Wulfric");
         list.add("Brian");
         list.add("Dumbledore");
+        int index = 6;
 
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.remove(6);
+            list.remove(index);
         });
 
         assertNotNull(thrown.getMessage());
         assertEquals(6, list.size());
+
+        String message = "Index: "+ index + ";\nIndex must be between " +
+        "\"0\" and \"" + (list.size() - 1) + "\".";
+        assertEquals(message, thrown.getMessage());
     }
 
     @Test
@@ -183,13 +196,18 @@ public abstract class AbstractListTest {
         list.add("Wulfric");
         list.add("Brian");
         list.add("Dumbledore");
+        int index = -1;
 
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.remove(-1);
+            list.remove(index);
         });
 
         assertNotNull(thrown.getMessage());
         assertEquals(6, list.size());
+
+        String message = "Index: "+ index + ";\nIndex must be between " +
+                "\"0\" and \"" + (list.size() - 1) + "\".";
+        assertEquals(message, thrown.getMessage());
     }
 
     @Test
@@ -239,13 +257,18 @@ public abstract class AbstractListTest {
         list.add("Wulfric");
         list.add("Brian");
         list.add("Dumbledore");
+        int index = 5;
 
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.get(5);
+            list.get(index);
         });
 
         assertNotNull(thrown.getMessage());
         assertEquals(5, list.size());
+
+        String message = "Index: "+ index + ";\nIndex must be between " +
+                "\"0\" and \"" + (list.size() - 1) + "\".";
+        assertEquals(message, thrown.getMessage());
     }
 
     @Test
@@ -256,13 +279,18 @@ public abstract class AbstractListTest {
         list.add("Wulfric");
         list.add("Brian");
         list.add("Dumbledore");
+        int index = -1;
 
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.get(-1);
+            list.get(index);
         });
 
         assertNotNull(thrown.getMessage());
         assertEquals(5, list.size());
+
+        String message = "Index: "+ index + ";\nIndex must be between " +
+                "\"0\" and \"" + (list.size() - 1) + "\".";
+        assertEquals(message, thrown.getMessage());
     }
 
     @Test
@@ -318,13 +346,18 @@ public abstract class AbstractListTest {
         list.add("Wulfric");
         list.add("Brian");
         list.add("Dumbledore");
+        int index = 5;
 
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.set("Potter", 5);
+            list.set("Potter", index);
         });
 
         assertNotNull(thrown.getMessage());
         assertEquals(5, list.size());
+
+        String message = "Index: "+ index + ";\nIndex must be between " +
+                "\"0\" and \"" + (list.size() - 1) + "\".";
+        assertEquals(message, thrown.getMessage());
     }
 
     @DisplayName("Test, try to set element with index less than zero.")
@@ -335,13 +368,18 @@ public abstract class AbstractListTest {
         list.add("Wulfric");
         list.add("Brian");
         list.add("Dumbledore");
+        int index = -1;
 
         Throwable thrown = assertThrows(IndexOutOfBoundsException.class, () -> {
-            list.set("Potter", -1);
+            list.set("Potter", index);
         });
 
         assertNotNull(thrown.getMessage());
         assertEquals(5, list.size());
+
+        String message = "Index: "+ index + ";\nIndex must be between " +
+                "\"0\" and \"" + (list.size() - 1) + "\".";
+        assertEquals(message, thrown.getMessage());
     }
 
     @Test
@@ -481,6 +519,9 @@ public abstract class AbstractListTest {
         Iterator<String> iterator = list.iterator();
         Throwable thrown = assertThrows(NoSuchElementException.class, iterator::next);
         assertNotNull(thrown.getMessage());
+
+        String message = "No more elements.";
+        assertEquals(message, thrown.getMessage());
     }
 
     @Test

@@ -1,6 +1,6 @@
 package guchi.the.hasky.datastructures.list;
 
-import guchi.the.hasky.datastructures.annotation.ForTestsOnly;
+import guchi.the.hasky.datastructures.annotation.DefaultModifierForTests;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -134,7 +134,7 @@ public class ArrayList<T> implements List<T> {
         return new MyIterator();
     }
 
-    @ForTestsOnly
+    @DefaultModifierForTests
     T[] getArray() {
         return array;
     }
@@ -162,16 +162,16 @@ public class ArrayList<T> implements List<T> {
     }
 
     private String initCapacityErrorMessage(int capacity) {
-        return String.format("Error, initial capacity: %d, \ncan't be less than \"0\".", capacity);
+        return String.format("Initial capacity: %d, \ncan't be less than \"0\".", capacity);
     }
 
     private String indexAddErrorMessage(int index) {
-        return String.format("Error, index: %d;\nIndex must be between " +
+        return String.format("Index: %d;\nIndex must be between " +
                 "\"0\" and \"%d\".", index, size);
     }
 
     private String indexErrorMessage(int index) {
-        return String.format("Error, index: %d;\nIndex must be between " +
+        return String.format("Index: %d;\nIndex must be between " +
                 "\"0\" and \"%d\".", index, size - 1);
     }
 

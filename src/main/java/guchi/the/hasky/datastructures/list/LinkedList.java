@@ -161,12 +161,12 @@ public class LinkedList<T> implements List<T> {
     }
 
     private String indexAddErrorMessage(int index) {
-        return String.format("Error, index: %d;\nIndex must be between " +
+        return String.format("Index: %d;\nIndex must be between " +
                 "\"0\" and \"%d\".", index, size);
     }
 
     private String indexErrorMessage(int index) {
-        return String.format("Error, index: %d;\nIndex must be between " +
+        return String.format("Index: %d;\nIndex must be between " +
                 "\"0\" and \"%d\".", index, size - 1);
     }
 
@@ -210,7 +210,8 @@ public class LinkedList<T> implements List<T> {
         public void remove() {
             if (!canRemove) {
                 throw new IllegalStateException("Invoke next() method first.");
-            } else if (current == null) {
+            }
+            if (size == 1) {
                 first = last = null;
                 size--;
             } else {

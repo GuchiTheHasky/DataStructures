@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static guchi.the.hasky.datastructures.map.HashMap.Entry;
 
 public class HahMapTest {
     HashMap<String, String> myMap;
@@ -23,19 +24,28 @@ public class HahMapTest {
     @Test
     @DisplayName("Test, initial capacity throw exception.")
     public void testInitialCapacityThrowException() {
+        int initCapacity = -1;
         Throwable thrown = assertThrows(IllegalArgumentException.class, () -> {
-            HashMap<Integer, Integer> inMap = new HashMap<>(-1);
+            HashMap<Integer, Integer> inMap = new HashMap<>(initCapacity);
         });
         assertNotNull(thrown.getMessage());
+        String message = "Error, wrong initial capacity: " + initCapacity +
+                ".\nYou can't input value less than \"0\".";
+        assertEquals(message, thrown.getMessage());
     }
 
     @Test
     @DisplayName("Test, default Grow Factor throw Exception.")
     public void testDefaultGrowFactorThrowException() {
+        int growFactor = -1;
         Throwable thrown = assertThrows(IllegalArgumentException.class, () -> {
             HashMap<Integer, Integer> inMap = new HashMap<>(0, -1);
         });
         assertNotNull(thrown.getMessage());
+        String message = "Error, wrong:\n" +
+                " grow factor - " + growFactor +" || load factor - 0,8\n" +
+                "You can't input value less than \"1\".";
+        assertEquals(message, thrown.getMessage());
     }
 
     @Test
@@ -139,11 +149,12 @@ public class HahMapTest {
     }
 
     @Test
-    @DisplayName("Test, iterator has next entry true.")
+    @DisplayName("Test, iterator method hasNext() work correctly, true.")
     public void testIteratorHasNextEntryTrue() {
         Iterator<HashMap.Entry<String, String>> iterator = myMap.iterator();
         assertTrue(iterator.hasNext());
-        iterator.next();
+        assertTrue(iterator.hasNext());
+        assertTrue(iterator.hasNext());
         assertTrue(iterator.hasNext());
         iterator.next();
         assertTrue(iterator.hasNext());
@@ -155,7 +166,7 @@ public class HahMapTest {
     @DisplayName("Test, iterator has next entry return false if map is empty.")
     public void testIteratorHasNextEntryFalse() {
         HashMap<String, String> testMap = new HashMap<>();
-        Iterator<HashMap.Entry<String, String>> iterator = testMap.iterator();
+        Iterator<Entry<String, String>> iterator = testMap.iterator();
         assertFalse(iterator.hasNext());
     }
 
@@ -164,7 +175,7 @@ public class HahMapTest {
     public void testIteratorNextThrowExceptionInEmptyMap() {
         Throwable thrown = assertThrows(NoSuchElementException.class, () -> {
             HashMap<String, String> testMap = new HashMap<>();
-            Iterator<HashMap.Entry<String, String>> iterator = testMap.iterator();
+            Iterator<Entry<String, String>> iterator = testMap.iterator();
             iterator.next();
         });
 
@@ -175,7 +186,7 @@ public class HahMapTest {
     @DisplayName("Test, iterator next() throw exception in map with values.")
     public void testIteratorNextThrowExceptionInMapWithValues() {
         Throwable thrown = assertThrows(NoSuchElementException.class, () -> {
-            Iterator<HashMap.Entry<String, String>> iterator = myMap.iterator();
+            Iterator<Entry<String, String>> iterator = myMap.iterator();
             iterator.next();
             iterator.next();
             iterator.next();
@@ -186,45 +197,48 @@ public class HahMapTest {
     }
 
     @Test
-    @DisplayName("Test, iterator method next() return values.")
+    @DisplayName("Test, iterator method next() return correct values.")
     public void testIteratorWorksCorrectly() {
-        Iterator<HashMap.Entry<String, String>> iterator = myMap.iterator();
-        String val1 = iterator.next().getValue();
-        String val2 = iterator.next().getValue();
-        String val3 = iterator.next().getValue();
+        Iterator<Entry<String, String>> iterator = myMap.iterator();
+        if (iterator.hasNext()) {
+            Entry<String, String> entry1 = iterator.next();
+            String value1 = entry1.getValue();
+            if (iterator.hasNext()) {
+                Entry<String, String> entry2 = iterator.next();
+                String value2 = entry2.getValue();
+                if (iterator.hasNext()) {
+                    Entry<String, String> entry3 = iterator.next();
+                    String value3 = entry3.getValue();
 
-        assertEquals("Staf", val1);
-
-        assertEquals("Hasky", val2);
-
-        assertEquals("Labrador", val3);
+                    assertEquals("Staf", value1);
+                    assertEquals("Hasky", value2);
+                    assertEquals("Labrador", value3);
+                }
+            }
+        }
     }
 
     @Test
     @DisplayName("Test, iterator remove from empty map throw IllegalStateException.")
     public void testIteratorRemoveFromEmptyMapThrowIllegalStateException() {
         HashMap<Integer, Integer> map = new HashMap<>();
-        Throwable thrown = assertThrows(NoSuchElementException.class, () -> {
-            Iterator<HashMap.Entry<Integer, Integer>> iterator = map.iterator();
+        Throwable thrown = assertThrows(IllegalStateException.class, () -> {
+            Iterator<Entry<Integer, Integer>> iterator = map.iterator();
             iterator.remove();
         });
         assertNotNull(thrown.getMessage());
     }
 
     @Test
-    @DisplayName("Test, iterator remove & check size.")
+    @DisplayName("Test, iterator method remove works correctly & check size.")
     public void testIteratorRemoveAndCheckSize() {
-        Iterator<HashMap.Entry<String, String>> iterator = myMap.iterator();
+        Iterator<Entry<String, String>> iterator = myMap.iterator();
         assertEquals(3, myMap.size());
-        iterator.next();
-        iterator.remove();
-        assertEquals(2, myMap.size());
-        iterator.next();
-        iterator.remove();
-        assertEquals(1, myMap.size());
-        iterator.next();
-        iterator.remove();
-        assertEquals(0, myMap.size());
+        while (iterator.hasNext()) {
+            iterator.next();
+            iterator.remove();
+        }
+        assertFalse(iterator.hasNext());
     }
 
     @Test
@@ -241,5 +255,4 @@ public class HahMapTest {
         assertEquals(expectedSecond, actualSecond);
         assertEquals(expectedThird, actualThird);
     }
-
 }

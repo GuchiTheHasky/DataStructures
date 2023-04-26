@@ -112,51 +112,50 @@ public class HashMap<K, V> implements Map<K, V> {
     }
 
     private class MyIterator implements Iterator<Entry<K, V>> {
-        private final List<Entry<K, V>> list = convertMapContentInList();
-        int entryPosition = 0;
-        private boolean canRemove = false;
+        private int bucketIndex;
+        private Iterator<Entry<K, V>> bucketIterator;
 
         @Override
         public boolean hasNext() {
-            if (entryPosition == list.size()) {
-                return false;
+            if (bucketIterator != null && bucketIterator.hasNext()) {
+                return true;
             }
-            return size != 0;
+            while (bucketIndex < buckets.length - 1) {
+                bucketIndex++;
+                if (buckets[bucketIndex] != null) {
+                    bucketIterator = buckets[bucketIndex].iterator();
+                    if (bucketIterator.hasNext()) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         @Override
         public Entry<K, V> next() {
-            if (entryPosition == list.size()) {
-                throw new NoSuchElementException("Map is empty.");
+            if (bucketIterator != null && bucketIterator.hasNext()) {
+                return bucketIterator.next();
             }
-            entryPosition++;
-            canRemove = true;
-            return list.get(entryPosition - 1);
+            while (bucketIndex < buckets.length - 1) {
+                bucketIndex++;
+                if (buckets[bucketIndex] != null) {
+                    bucketIterator = buckets[bucketIndex].iterator();
+                    if (bucketIterator.hasNext()) {
+                        return bucketIterator.next();
+                    }
+                }
+            }
+            throw new NoSuchElementException("Немає більше елементів.");
         }
 
         @Override
         public void remove() {
-            if (!canRemove) {
-                throw new NoSuchElementException("Call next(), first.");
+            if (bucketIterator == null) {
+                throw new IllegalStateException("Call next() first.");
             }
-            canRemove = false;
-            list.remove(entryPosition - 1);
-            entryPosition--;
+            bucketIterator.remove();
             size--;
-        }
-
-        private List<Entry<K, V>> convertMapContentInList() {
-            List<Entry<K, V>> mapInList = new ArrayList<>();
-            for (List<Entry<K, V>> bucket : buckets) {
-                if (bucket.size() > 0) {
-                    for (Entry<K, V> kvEntry : bucket) {
-                        if (kvEntry != null) {
-                            mapInList.add(kvEntry);
-                        }
-                    }
-                }
-            }
-            return mapInList;
         }
     }
 
@@ -183,8 +182,8 @@ public class HashMap<K, V> implements Map<K, V> {
     }
 
     private Entry<K, V> getEntry(K key) {
-        if (size > 0) {
-            List<Entry<K, V>> currentList = getBucket(key);
+        List<Entry<K, V>> currentList = getBucket(key);
+        if (currentList != null) {
             for (Entry<K, V> entry : currentList) {
                 if (Objects.equals(entry.key, key)) {
                     return entry;
@@ -226,7 +225,7 @@ public class HashMap<K, V> implements Map<K, V> {
     private String errorFactorMessage(int growFactor, double loadFactor) {
         return String.format("""
                 Error, wrong:
-                 grow factor - %d || load factor - %,.1f
+                 grow factor - %d || load factor - %.1f
                 You can't input value less than "1".""", growFactor, loadFactor);
     }
 

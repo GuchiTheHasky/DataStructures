@@ -182,8 +182,8 @@ public abstract class AbstractListTest {
         assertNotNull(thrown.getMessage());
         assertEquals(6, list.size());
 
-        String message = "Index: "+ index + ";\nIndex must be between " +
-        "\"0\" and \"" + (list.size() - 1) + "\".";
+        String message = "Index: " + index + ";\nIndex must be between " +
+                "\"0\" and \"" + (list.size() - 1) + "\".";
         assertEquals(message, thrown.getMessage());
     }
 
@@ -205,7 +205,7 @@ public abstract class AbstractListTest {
         assertNotNull(thrown.getMessage());
         assertEquals(6, list.size());
 
-        String message = "Index: "+ index + ";\nIndex must be between " +
+        String message = "Index: " + index + ";\nIndex must be between " +
                 "\"0\" and \"" + (list.size() - 1) + "\".";
         assertEquals(message, thrown.getMessage());
     }
@@ -266,7 +266,7 @@ public abstract class AbstractListTest {
         assertNotNull(thrown.getMessage());
         assertEquals(5, list.size());
 
-        String message = "Index: "+ index + ";\nIndex must be between " +
+        String message = "Index: " + index + ";\nIndex must be between " +
                 "\"0\" and \"" + (list.size() - 1) + "\".";
         assertEquals(message, thrown.getMessage());
     }
@@ -288,7 +288,7 @@ public abstract class AbstractListTest {
         assertNotNull(thrown.getMessage());
         assertEquals(5, list.size());
 
-        String message = "Index: "+ index + ";\nIndex must be between " +
+        String message = "Index: " + index + ";\nIndex must be between " +
                 "\"0\" and \"" + (list.size() - 1) + "\".";
         assertEquals(message, thrown.getMessage());
     }
@@ -355,7 +355,7 @@ public abstract class AbstractListTest {
         assertNotNull(thrown.getMessage());
         assertEquals(5, list.size());
 
-        String message = "Index: "+ index + ";\nIndex must be between " +
+        String message = "Index: " + index + ";\nIndex must be between " +
                 "\"0\" and \"" + (list.size() - 1) + "\".";
         assertEquals(message, thrown.getMessage());
     }
@@ -377,7 +377,7 @@ public abstract class AbstractListTest {
         assertNotNull(thrown.getMessage());
         assertEquals(5, list.size());
 
-        String message = "Index: "+ index + ";\nIndex must be between " +
+        String message = "Index: " + index + ";\nIndex must be between " +
                 "\"0\" and \"" + (list.size() - 1) + "\".";
         assertEquals(message, thrown.getMessage());
     }

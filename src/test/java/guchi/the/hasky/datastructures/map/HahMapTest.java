@@ -43,7 +43,7 @@ public class HahMapTest {
         });
         assertNotNull(thrown.getMessage());
         String message = "Error, wrong:\n" +
-                " grow factor - " + growFactor +" || load factor - 0,8\n" +
+                " grow factor - " + growFactor + " || load factor - 0,8\n" +
                 "You can't input value less than \"1\".";
         assertEquals(message, thrown.getMessage());
     }

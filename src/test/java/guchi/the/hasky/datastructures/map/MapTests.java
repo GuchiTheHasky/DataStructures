@@ -81,9 +81,9 @@ public class MapTests {
     public void givenMultipleNodesInSameBucketWhenGetByExistingKeyThenGetByKeyReturnsCorrespondingValue() {
         HashMap<String, String> myMap = new HashMap<>();
 
-        String firstKey = "key2"; //same bucket
-        String secondKey = "key-1"; //same bucket
-        String thirdKey = "key-10"; //same bucket
+        String firstKey = "key2";
+        String secondKey = "key-1";
+        String thirdKey = "key-10";
 
         String firstValue = "value2";
         String secondValue = "value3";
